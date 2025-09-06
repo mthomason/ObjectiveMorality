@@ -1,0 +1,20 @@
+{
+	"cSpell.words": [
+		"Thomason",
+		"Consequentialist",
+		"Contractualist",
+		"Deontological",
+		"Nieizschean",
+		"Rossian",
+	],
+	"cSpell.files": [
+		"/**"
+	],
+	"cSpell.ignorePaths": [
+		"**/venv/**",
+		"**/.gitignore"
+	],
+	"editor.tabSize": 4,
+	"editor.detectIndentation": false
+
+}
