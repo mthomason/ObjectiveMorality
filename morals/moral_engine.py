@@ -6,12 +6,14 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
+from .moral_context import MoralContext
+
 # ------------------------------
 # Base Class for Moral Engines
 # ------------------------------
 
 class MoralEngine:
-	def evaluate(self, action, context):
+	def evaluate(self, action: str, context: MoralContext):
 		raise NotImplementedError("Each moral engine must implement evaluate()")
 
 # ------------------------------
@@ -23,7 +25,7 @@ class KantianEngine(MoralEngine):
 		"""
 		Action is wrong if universalizing it causes contradiction.
 		"""
-		if context["universalized_result"]["self_collapse"]:
+		if context.universalized_result.self_collapse:
 			return "Impermissible"
 		return "Permissible"
 
@@ -36,9 +38,9 @@ class UtilitarianEngine(MoralEngine):
 		"""
 		Action is right if net flourishing > 0
 		"""
-		if context["consequences"]["net_flourishing"] > 0:
+		if context.consequences.net_flourishing > 0:
 			return "Permissible"
-		elif context["consequences"]["net_flourishing"] < 0:
+		elif context.consequences.net_flourishing < 0:
 			return "Impermissible"
 		else:
 			return "Neutral"
@@ -53,9 +55,9 @@ class AristotelianEngine(MoralEngine):
 		Action is virtuous if it aligns with flourishing life & stable character.
 		Uses consequences + trust + social stability as proxies.
 		"""
-		if context["consequences"]["net_flourishing"] > 0 and context["cooperative_outcome"]["stable"]:
+		if context.consequences.net_flourishing > 0 and context.cooperative_outcome.stable:
 			return "Virtuous"
-		elif context["consequences"]["net_flourishing"] < 0:
+		elif context.consequences.net_flourishing < 0:
 			return "Vicious"
 		else:
 			return "Contingent"
@@ -70,7 +72,7 @@ class ContractualistEngine(MoralEngine):
 		Action is wrong if reasonable persons behind a veil of ignorance
 		would reject the rule permitting it.
 		"""
-		if context["trust_impact"]["breach"]:
+		if context.trust_impact.breach:
 			return "Impermissible"
 		return "Permissible"
 
@@ -79,7 +81,7 @@ class ContractualistEngine(MoralEngine):
 # ------------------------------
 
 class MoralEngineRunner:
-	def run_engines(action, context):
+	def run_engines(self, action: str, context: MoralContext):
 		engines = {
 			"Kantian": KantianEngine(),
 			"Utilitarian": UtilitarianEngine(),
