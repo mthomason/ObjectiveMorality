@@ -7,13 +7,14 @@
 # I claim copyright, only to ensure its release into the public domain.
 
 from .moral_context import MoralContext
+from .moral_value import PhilosophicalMoralValue, AristotelianMoralValue, UtilitarianMoralValue
 
 # ------------------------------
 # Base Class for Moral Engines
 # ------------------------------
 
 class MoralEngine:
-	def evaluate(self, action: str, context: MoralContext):
+	def evaluate(self, action: str, context: MoralContext) -> PhilosophicalMoralValue:
 		raise NotImplementedError("Each moral engine must implement evaluate()")
 
 # ------------------------------
@@ -21,60 +22,60 @@ class MoralEngine:
 # ------------------------------
 
 class KantianEngine(MoralEngine):
-	def evaluate(self, action, context):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
 		"""
 		Action is wrong if universalizing it causes contradiction.
 		"""
 		if context.universalized_result.self_collapse:
-			return "Impermissible"
-		return "Permissible"
+			return UtilitarianMoralValue.IMPERMISSIBLE
+		return UtilitarianMoralValue.PERMISSIBLE
 
 # ------------------------------
 # Utilitarian Engine (Consequentialist)
 # ------------------------------
 
 class UtilitarianEngine(MoralEngine):
-	def evaluate(self, action, context):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
 		"""
 		Action is right if net flourishing > 0
 		"""
 		if context.consequences.net_flourishing > 0:
-			return "Permissible"
+			return UtilitarianMoralValue.PERMISSIBLE
 		elif context.consequences.net_flourishing < 0:
-			return "Impermissible"
+			return UtilitarianMoralValue.IMPERMISSIBLE
 		else:
-			return "Neutral"
+			return UtilitarianMoralValue.NEUTRAL
 
 # ------------------------------
 # Aristotelian Engine (Virtue Ethics)
 # ------------------------------
 
 class AristotelianEngine(MoralEngine):
-	def evaluate(self, action, context):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
 		"""
 		Action is virtuous if it aligns with flourishing life & stable character.
 		Uses consequences + trust + social stability as proxies.
 		"""
 		if context.consequences.net_flourishing > 0 and context.cooperative_outcome.stable:
-			return "Virtuous"
+			return AristotelianMoralValue.VIRTUOUS
 		elif context.consequences.net_flourishing < 0:
-			return "Vicious"
+			return AristotelianMoralValue.VICIOUS
 		else:
-			return "Contingent"
+			return AristotelianMoralValue.CONTINENT
 
 # ------------------------------
 # Contractualist Engine
 # ------------------------------
 
 class ContractualistEngine(MoralEngine):
-	def evaluate(self, action, context):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
 		"""
 		Action is wrong if reasonable persons behind a veil of ignorance
 		would reject the rule permitting it.
 		"""
 		if context.trust_impact.breach:
-			return "Impermissible"
-		return "Permissible"
+			return UtilitarianMoralValue.IMPERMISSIBLE
+		return UtilitarianMoralValue.PERMISSIBLE
 
 # ------------------------------
 # Moral Engine Runner
@@ -91,5 +92,5 @@ class MoralEngineRunner:
 	
 		results = {}
 		for name, engine in engines.items():
-			results[name] = engine.evaluate(action, context)
+			results[name] = str(engine.evaluate(action, context))
 		return results
