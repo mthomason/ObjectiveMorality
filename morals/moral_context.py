@@ -6,30 +6,69 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
 class UniversalizedResult:
-	def __init__(self, self_collapse: bool):
-		self.self_collapse: bool = self_collapse
+	"""
+	Represents the result of universalizing a moral principle.
+	"""
+	self_collapse: bool
 
+	def __post_init__(self):
+		if not isinstance(self.self_collapse, bool):
+			raise TypeError("self_collapse must be a boolean")
+
+@dataclass(frozen=True)
 class Consequences:
-	def __init__(self, net_flourishing: int):
-		self.net_flourishing: int = net_flourishing
+	"""
+	Quantifies the net flourishing resulting from an action.
+	"""
+	net_flourishing: int
 
+	def __post_init__(self):
+		if not isinstance(self.net_flourishing, int):
+			raise TypeError("net_flourishing must be an integer")
+
+@dataclass(frozen=True)
 class CooperativeOutcome:
-	def __init__(self, stable: bool):
-		self.stable: bool = stable
+	"""
+	Indicates whether cooperation was stable in the scenario.
+	"""
+	stable: bool
 
+	def __post_init__(self):
+		if not isinstance(self.stable, bool):
+			raise TypeError("stable must be a boolean")
+
+@dataclass(frozen=True)
 class TrustImpact:
-	def __init__(self, breach: bool):
-		self.breach: bool = breach
+	"""
+	Records whether trust was breached in the interaction.
+	"""
+	breach: bool
 
+	def __post_init__(self):
+		if not isinstance(self.breach, bool):
+			raise TypeError("breach must be a boolean")
+
+@dataclass(frozen=True)
 class MoralContext:
-	def __init__(
-			self,
-			universalized_result: UniversalizedResult,
-			consequences: Consequences,
-			cooperative_outcome: CooperativeOutcome,
-			trust_impact: TrustImpact):
-		self.universalized_result: UniversalizedResult = universalized_result
-		self.consequences: Consequences = consequences
-		self.cooperative_outcome: CooperativeOutcome = cooperative_outcome
-		self.trust_impact: TrustImpact = trust_impact
+	"""
+	Comprehensive moral evaluation context combining multiple ethical frameworks.
+	"""
+	universalized_result: UniversalizedResult
+	consequences: Consequences
+	cooperative_outcome: CooperativeOutcome
+	trust_impact: TrustImpact
+
+	def __post_init__(self):
+		# Type validation
+		if not isinstance(self.universalized_result, UniversalizedResult):
+			raise TypeError("universalized_result must be a UniversalizedResult instance")
+		if not isinstance(self.consequences, Consequences):
+			raise TypeError("consequences must be a Consequences instance")
+		if not isinstance(self.cooperative_outcome, CooperativeOutcome):
+			raise TypeError("cooperative_outcome must be a CooperativeOutcome instance")
+		if not isinstance(self.trust_impact, TrustImpact):
+			raise TypeError("trust_impact must be a TrustImpact instance")
