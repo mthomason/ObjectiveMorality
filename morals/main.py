@@ -252,11 +252,67 @@ def main():
 	)
 	result_charity = engine_runner.run_engines("charitable_donation", context_charity)
 
+	context_mass_surveillance = MoralContext(
+		action_description="Implemented mass surveillance program collecting data on all citizens without individualized warrants, justified by national security claims.",
+		
+		universalized_result=UniversalizedResult(
+			self_collapse=True,				# If everyone spied on everyone, society collapses
+			contradiction_in_will=True		# No rational being would will a world without privacy
+		),
+		
+		consequences=Consequences(
+			net_flourishing=-15,			# Chilling effect on free expression, self-censorship
+			net_utility=-5,					# Mixed: some security benefits vs massive privacy costs
+			individual_impact={
+				"citizens": -30,			# Loss of privacy, autonomy, trust
+				"government": +10,			# Increased perceived security, power
+				"dissidents": -50,			# Targeted repression, fear
+				"criminals": -5				# Some prevention, but many evade
+			},
+			power_expression=+8				# Massive state power increase
+		),
+		
+		cooperative_outcome=CooperativeOutcome(
+			stable=False,				 # Erodes social trust, creates paranoid society
+			societal_trust_change=-20	 # Severe damage to citizen-government trust
+		),
+		
+		trust_impact=TrustImpact(
+			breach=True,
+			relationships_affected=["citizen_state", "social_fabric", "international_trust"],
+			impact_type=[
+				RelationshipImpact.BREACHES_TRUST,
+				RelationshipImpact.EXPLOITS,
+				RelationshipImpact.WEAKENS
+			]
+		),
+		
+		agent=Agent(
+			agent_type=AgentType.STATE_OFFICIAL,
+			virtues=[Virtue.JUSTICE],								# Claimed intention to protect
+			vices=[Vice.DISHONESTY, Vice.UNFAIRNESS, Vice.CRUELTY]	# Deception, inequality, potential repression
+		),
+		
+		duty_assessment=DutyAssessment(
+			duties_upheld=[
+				DutyType.BENEFICENCE,		# Claimed protection of public safety
+				DutyType.JUSTICE			# Claimed protection of social order
+			],
+			duties_violated=[
+				DutyType.FIDELITY,			# Breach of social contract
+				DutyType.NON_MALEFICENCE,	# Harms privacy, autonomy, trust
+				DutyType.JUSTICE			# Violates due process, equal protection
+			]
+		)
+	)
+	result_mass_surveillance = engine_runner.run_engines("mass_surveillance", context_mass_surveillance)
+
 	engine_runner.display_results("adultery", result_adultery)
 	engine_runner.display_results("pork_modern", result_pork_modern)
 	engine_runner.display_results("pork_premodern", result_pork_premodern)
 	engine_runner.display_results("tell_a_lie", result_tell_a_lie)
 	engine_runner.display_results("charitable_donation", result_charity)
+	engine_runner.display_results("mass_surveillance", result_mass_surveillance)
 	print("")
 
 if __name__ == "__main__":
