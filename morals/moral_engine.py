@@ -108,8 +108,23 @@ class ContractualistEngine(MoralEngine):
 
 class RossianEngine(MoralEngine):
 	def evaluate(self, action, context) -> PhilosophicalMoralValue:
-		# Define a hierarchy or weighting of duties. Non-maleficence is often strongest.
-		duty_weights = {
+		# Context-sensitive duty weights
+		duty_weights = self._calculate_contextual_weights(context)
+
+		weight_upheld = sum(duty_weights[d] for d in context.duty_assessment.duties_upheld)
+		weight_violated = sum(duty_weights[d] for d in context.duty_assessment.duties_violated)
+
+		# Add margin for Ross's "moral uncertainty"
+		if abs(weight_upheld - weight_violated) < 3:  # Too close to call
+			return RossianMoralValue.CONFLICTING
+		elif weight_upheld > weight_violated:
+			return RossianMoralValue.PERMISSIBLE
+		else:
+			return RossianMoralValue.IMPERMISSIBLE
+
+	def _calculate_contextual_weights(self, context: MoralContext) -> dict[DutyType, int]:
+		"""Duty stringency depends on context - this is key to Ross's theory"""
+		base_weights = {
 			DutyType.NON_MALEFICENCE: 10,
 			DutyType.FIDELITY: 7,
 			DutyType.JUSTICE: 8,
@@ -118,16 +133,12 @@ class RossianEngine(MoralEngine):
 			DutyType.REPARATION: 5,
 			DutyType.SELF_IMPROVEMENT: 4,
 		}
-		# Calculate the total "moral weight" of upheld vs. violated duties
-		weight_upheld = sum(duty_weights[d] for d in context.duty_assessment.duties_upheld)
-		weight_violated = sum(duty_weights[d] for d in context.duty_assessment.duties_violated)
 
-		if weight_upheld > weight_violated:
-			return RossianMoralValue.PERMISSIBLE # Right action
-		elif weight_upheld < weight_violated:
-			return RossianMoralValue.IMPERMISSIBLE # Wrong action
-		else:
-			return RossianMoralValue.CONFLICTING
+		# Adjust based on context (example logic)
+		if context.consequences.net_utility < -10:
+			base_weights[DutyType.NON_MALEFICENCE] += 5  # Harm prevention becomes more urgent
+
+		return base_weights
 
 # ------------------------------
 # Nietzschean Engine
