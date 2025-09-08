@@ -181,3 +181,18 @@ class MoralContext:
 			raise TypeError("duty_assessment must be a DutyAssessment instance")
 		if not isinstance(self.action_description, str):
 			raise TypeError("action_description must be a string")
+
+__all__ = [
+	'MoralContext',
+	'TrustImpact',
+	'CooperativeOutcome',
+	'Consequences',
+	'UniversalizedResult',
+	'DutyAssessment',
+	'Agent',
+	'Virtue',
+	'Vice',
+	'DutyType',
+	'AgentType',
+	'RelationshipImpact'
+]
