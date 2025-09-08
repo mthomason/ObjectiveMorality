@@ -165,6 +165,19 @@ class EthicsOfCareEngine(MoralEngine):
 			return CareMoralValue.NEUTRAL
 
 # ------------------------------
+# Rawlsian Engine
+# ------------------------------
+
+class RawlsianEngine(MoralEngine):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
+		# An action is unjust if it increases inequality or harms the least advantaged.
+		# We use `societal_trust_change` as a proxy for social stability/justice.
+		if context.cooperative_outcome.societal_trust_change < 0:
+			return RawlsianMoralValue.UNJUST
+		else:
+			return RawlsianMoralValue.JUST
+
+# ------------------------------
 # Moral Engine Runner
 # ------------------------------
 
@@ -178,6 +191,7 @@ class MoralEngineRunner:
 			"Rossian": RossianEngine(),
 			"Nietzschean": NietzscheanEngine(),
 			"Ethics of Care": EthicsOfCareEngine(),
+			"Rawls Modern Contractualism": RawlsianEngine(),
 		}
 	
 		results = {}

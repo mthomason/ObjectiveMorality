@@ -197,11 +197,38 @@ class CareMoralValue(PhilosophicalMoralValue):
 		else:
 			return "Neutral impact on relationships"
 
+class RawlsianMoralValue(PhilosophicalMoralValue):
+	"""
+	Rawls' moral valuations focused on justice and fairness from behind the veil of ignorance.
+	"""
+	JUST = auto()		   # Promotes fairness, especially for least advantaged
+	UNJUST = auto()		 # Creates or exacerbates unfair inequality
+	NEUTRAL = auto()		# No significant impact on social justice
+
+	def to_core(self) -> MoralValue:
+		"""Map Rawlsian evaluation to core moral values."""
+		if self == self.JUST:
+			return MoralValue.GOOD
+		elif self == self.UNJUST:
+			return MoralValue.BAD
+		else:
+			return MoralValue.NEUTRAL
+
+	def moral_quality(self) -> str:
+		"""Describe the moral quality in Rawlsian terms."""
+		if self == self.JUST:
+			return "Promotes fair social arrangements (just)"
+		elif self == self.UNJUST:
+			return "Creates or maintains unfair inequality (unjust)"
+		else:
+			return "Neutral impact on social justice"
+
 __all__ = [
 	'PhilosophicalMoralValue',
 	'AristotelianMoralValue',
 	'UtilitarianMoralValue',
 	'RossianMoralValue',
 	'NietzscheanMoralValue',
-	'CareMoralValue'
+	'CareMoralValue',
+	'RawlsianMoralValue'
 ]
