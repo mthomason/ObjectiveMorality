@@ -6,7 +6,7 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
-from .moral_context import MoralContext, DutyType
+from .moral_context import MoralContext, DutyType, AgentType
 from .moral_value import *
 
 # ------------------------------
@@ -102,6 +102,10 @@ class ContractualistEngine(MoralEngine):
 			return UtilitarianMoralValue.IMPERMISSIBLE
 		return UtilitarianMoralValue.PERMISSIBLE
 
+# ------------------------------
+# Rossian Engine
+# ------------------------------
+
 class RossianEngine(MoralEngine):
 	def evaluate(self, action, context) -> PhilosophicalMoralValue:
 		# Define a hierarchy or weighting of duties. Non-maleficence is often strongest.
@@ -126,6 +130,26 @@ class RossianEngine(MoralEngine):
 			return RossianMoralValue.CONFLICTING
 
 # ------------------------------
+# Nietzschean Engine
+# ------------------------------
+
+class NietzscheanEngine(MoralEngine):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
+		# Nietzsche would evaluate based on the agent's type and the action's nature
+		if context.agent.agent_type == AgentType.MASTER:
+			# For a "master" type, an action is good if it expresses power and creativity.
+			if context.consequences.power_expression > 0 and not context.trust_impact.breach:
+				return NietzscheanMoralValue.MASTER_GOOD
+			else:
+				return NietzscheanMoralValue.MASTER_BAD
+		else:
+			# For a "slave" type, he would critique their morality but describe it.
+			if context.trust_impact.breach: # Slave morality emphasizes meekness, fairness
+				return NietzscheanMoralValue.SLAVE_BAD
+			else:
+				return NietzscheanMoralValue.SLAVE_GOOD
+
+# ------------------------------
 # Moral Engine Runner
 # ------------------------------
 
@@ -137,6 +161,7 @@ class MoralEngineRunner:
 			"Aristotelian": AristotelianEngine(),
 			"Contractualist": ContractualistEngine(),
 			"Rossian": RossianEngine(),
+			"Nietzschean": NietzscheanEngine(),
 		}
 	
 		results = {}

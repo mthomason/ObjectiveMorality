@@ -136,9 +136,46 @@ class AristotelianMoralValue(PhilosophicalMoralValue):
 		else:
 			raise ValueError(f"Unknown value: {self}")
 
+class NietzscheanMoralValue(PhilosophicalMoralValue):
+	"""
+	Nietzsche's moral valuations based on master vs. slave morality and will to power.
+	"""
+	MASTER_GOOD = auto()	# Life-affirming, noble, powerful (for the exceptional)
+	MASTER_BAD = auto()		# Life-denying, contemptible, weak (for the exceptional)
+	SLAVE_GOOD = auto()		# Meek, humble, pious (from perspective of slave morality)
+	SLAVE_BAD = auto()		# Proud, powerful, selfish (from perspective of slave morality)
+
+	def to_core(self) -> MoralValue:
+		"""Map Nietzsche's evaluation to core moral values."""
+		if self == self.MASTER_GOOD:
+			return MoralValue.GOOD  # From the master perspective
+		elif self == self.SLAVE_GOOD:
+			return MoralValue.GOOD  # From the slave perspective
+		else:
+			return MoralValue.BAD
+
+	def moral_quality(self) -> str:
+		"""Describe the moral quality in Nietzschean terms."""
+		if self == self.MASTER_GOOD:
+			return "Life-affirming master virtue (noble, powerful)"
+		elif self == self.MASTER_BAD:
+			return "Life-denying master vice (contemptible, weak)"
+		elif self == self.SLAVE_GOOD:
+			return "Slave virtue (meek, humble, pious)"
+		elif self == self.SLAVE_BAD:
+			return "Slave vice (proud, powerful, 'evil')"
+		else:
+			raise ValueError(f"Unknown value: {self}")
+
+	def __str__(self) -> str:
+		"""Pretty print value with underscore removed."""
+		return self.name.title().replace("_", " ")
+
+
 __all__ = [
 	'PhilosophicalMoralValue',
 	'AristotelianMoralValue',
 	'UtilitarianMoralValue',
-	'RossianMoralValue'
+	'RossianMoralValue',
+	'NietzscheanMoralValue'
 ]
