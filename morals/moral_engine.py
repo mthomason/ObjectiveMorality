@@ -135,19 +135,48 @@ class RossianEngine(MoralEngine):
 
 class NietzscheanEngine(MoralEngine):
 	def evaluate(self, action, context) -> PhilosophicalMoralValue:
-		# Nietzsche would evaluate based on the agent's type and the action's nature
-		if context.agent.agent_type == AgentType.MASTER:
-			# For a "master" type, an action is good if it expresses power and creativity.
-			if context.consequences.power_expression > 0 and not context.trust_impact.breach:
-				return NietzscheanMoralValue.MASTER_GOOD
-			else:
-				return NietzscheanMoralValue.MASTER_BAD
+		"""
+		Authentic Nietzschean evaluation based on:
+		1. Does the action express will to power or will to weakness?
+		2. Is it active/creative or reactive/resentful?
+		3. Does it affirm or deny life?
+		4. Does it originate from strength or fear?
+		"""
+		# Nietzschean analysis of the action's character
+		is_active = (context.consequences.power_expression > 2 and 
+					not context.trust_impact.breach)
+		
+		is_reactive = (context.trust_impact.breach or 
+					  context.consequences.power_expression < 0)
+		
+		is_life_affirming = (context.consequences.net_flourishing > 0 or
+							context.consequences.power_expression > 5)
+		
+		is_life_denying = (context.consequences.net_flourishing < -5 or
+						  context.cooperative_outcome.societal_trust_change < -3)
+		
+		originates_from_strength = (context.consequences.power_expression > 3 and
+								   len(context.agent.virtues) > len(context.agent.vices))
+		
+		originates_from_fear = (context.consequences.power_expression < 0 or
+							   context.cooperative_outcome.stable == False)
+
+		# Master morality: active, creative, life-affirming, from strength
+		if (is_active and is_life_affirming and originates_from_strength):
+			return NietzscheanMoralValue.MASTER_GOOD
+			
+		# Slave morality: reactive, resentful, life-denying, from fear/weakness  
+		elif (is_reactive and is_life_denying and originates_from_fear):
+			return NietzscheanMoralValue.SLAVE_BAD
+			
+		# Borderline cases that might align with slave morality's "good"
+		elif (not context.trust_impact.breach and 
+			  context.consequences.net_flourishing >= 0):
+			return NietzscheanMoralValue.SLAVE_GOOD
+			
 		else:
-			# For a "slave" type, he would critique their morality but describe it.
-			if context.trust_impact.breach: # Slave morality emphasizes meekness, fairness
-				return NietzscheanMoralValue.SLAVE_BAD
-			else:
-				return NietzscheanMoralValue.SLAVE_GOOD
+			# Truly ambiguous or complex cases
+			return NietzscheanMoralValue.SLAVE_BAD  # Default skeptical position
 
 # ------------------------------
 # Ethics of Care Engine
