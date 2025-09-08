@@ -27,8 +27,8 @@ class KantianEngine(MoralEngine):
 		Action is wrong if universalizing it causes contradiction.
 		"""
 		if context.universalized_result.self_collapse or context.universalized_result.contradiction_in_will:
-			return UtilitarianMoralValue.IMPERMISSIBLE
-		return UtilitarianMoralValue.PERMISSIBLE
+			return KantianMoralValue.IMPERMISSIBLE
+		return KantianMoralValue.PERMISSIBLE
 
 # ------------------------------
 # Utilitarian Engine (Consequentialist)
@@ -99,8 +99,8 @@ class ContractualistEngine(MoralEngine):
 		would reject the rule permitting it.
 		"""
 		if context.trust_impact.breach or context.cooperative_outcome.societal_trust_change < 0:
-			return UtilitarianMoralValue.IMPERMISSIBLE
-		return UtilitarianMoralValue.PERMISSIBLE
+			return ContractualistMoralValue.IMPERMISSIBLE
+		return ContractualistMoralValue.PERMISSIBLE
 
 # ------------------------------
 # Rossian Engine
@@ -191,10 +191,72 @@ class MoralEngineRunner:
 			"Rossian": RossianEngine(),
 			"Nietzschean": NietzscheanEngine(),
 			"Ethics of Care": EthicsOfCareEngine(),
-			"Rawls Modern Contractualism": RawlsianEngine(),
+			"Rawlsian": RawlsianEngine(),
 		}
-	
+		
 		results = {}
 		for name, engine in engines.items():
-			results[name] = str(engine.evaluate(action, context))
+			moral_value = engine.evaluate(action, context)
+			results[name] = {
+				'value_obj': moral_value,  # Store the actual enum object
+				'value_str': str(moral_value),
+				'quality': moral_value.moral_quality(),
+				'core': moral_value.to_core()  # Store the MoralValue enum, not string
+			}
 		return results
+
+	def display_results(self, action: str, results: dict):
+		"""Display the results in a rich, formatted way."""
+		print(f"\n{'='*60}")
+		print(f"MORAL ANALYSIS: {action.upper()}")
+		print(f"{'='*60}")
+		
+		# Group by core moral value ENUM for quick overview
+		core_groups: dict[MoralValue, list] = {
+			MoralValue.GOOD: [],
+			MoralValue.BAD: [],
+			MoralValue.NEUTRAL: []
+		}
+		
+		for philosopher, data in results.items():
+			core_value = data['core']  # This is now the MoralValue enum
+			core_groups[core_value].append(f"  {philosopher:.<25}: {data['value_str']}")
+		
+		print("\nQUICK CONSENSUS:")
+		print(f"✓ GOOD ({len(core_groups[MoralValue.GOOD])}):")
+		for item in core_groups[MoralValue.GOOD]:
+			print(f"   {item}")
+		
+		print(f"\n✗ BAD ({len(core_groups[MoralValue.BAD])}):")
+		for item in core_groups[MoralValue.BAD]:
+			print(f"   {item}")
+		
+		neutral_count = len(core_groups[MoralValue.NEUTRAL])
+		if neutral_count > 0:
+			print(f"\n~ NEUTRAL ({neutral_count}):")
+			for item in core_groups[MoralValue.NEUTRAL]:
+				print(f"   {item}")
+		
+		print(f"\n{'─'*60}")
+		print("DETAILED ANALYSIS:")
+		print(f"{'─'*60}")
+		
+		for philosopher, data in results.items():
+			print(f"\n{philosopher}:")
+			print(f"  Verdict: {data['value_str']}")
+			print(f"  Meaning: {data['quality']}")
+			print(f"  Core: {data['core'].name}")  # Use .name for the enum constant name
+		
+		# Optional: Show the core moral value mapping
+		print(f"\n{'─'*60}")
+		print("CORE MORAL VALUE MAPPING:")
+		print(f"{'─'*60}")
+		core_summary: dict = {}
+		for philosopher, data in results.items():
+			core_value = data['core']
+			if core_value not in core_summary:
+				core_summary[core_value] = []
+			core_summary[core_value].append(philosopher)
+		
+		for core_value, philosophers in core_summary.items():
+			print(f"{core_value.name}: {', '.join(philosophers)}")

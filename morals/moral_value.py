@@ -99,11 +99,11 @@ class UtilitarianMoralValue(PhilosophicalMoralValue):
 
 	def moral_quality(self) -> str:
 		if self == self.PERMISSIBLE:
-			return "Permissible"
+			return "Produces net positive utility/consequences"
 		elif self == self.IMPERMISSIBLE:
-			return "Impermissible"
+			return "Produces net negative utility/consequences"
 		else:
-			return "Neutral"
+			return "Neutral impact on overall utility"
 
 class AristotelianMoralValue(PhilosophicalMoralValue):
 	"""
@@ -223,12 +223,67 @@ class RawlsianMoralValue(PhilosophicalMoralValue):
 		else:
 			return "Neutral impact on social justice"
 
+class KantianMoralValue(PhilosophicalMoralValue):
+	"""
+	A Kantian deontological moral state.
+	"""
+	PERMISSIBLE = auto()
+	IMPERMISSIBLE = auto()
+
+	def to_core(self) -> MoralValue:
+		"""Map Kantian evaluation to core moral values."""
+		if self == self.PERMISSIBLE:
+			return MoralValue.GOOD
+		elif self == self.IMPERMISSIBLE:
+			return MoralValue.BAD
+		else:
+			# Should not get here...
+			return MoralValue.NEUTRAL
+
+	def moral_quality(self) -> str:
+		if self == self.PERMISSIBLE:
+			return "Passes the categorical imperative test (universalizable without contradiction)"
+		elif self == self.IMPERMISSIBLE:
+			return "Fails the categorical imperative test (cannot be universalized without contradiction)"
+		else:
+			# Should not get here...
+			return "No clear violation or adherence to moral law"
+
+class ContractualistMoralValue(PhilosophicalMoralValue):
+	"""
+	A Contractualist moral state (Scanlon-style).
+	"""
+	PERMISSIBLE = auto()
+	IMPERMISSIBLE = auto()
+
+	def to_core(self) -> MoralValue:
+		"""Map Contractualist evaluation to core moral values."""
+		if self == self.PERMISSIBLE:
+			return MoralValue.GOOD
+		elif self == self.IMPERMISSIBLE:
+			return MoralValue.BAD
+		else:
+			# Should not get here...
+			return MoralValue.NEUTRAL
+
+	def moral_quality(self) -> str:
+		if self == self.PERMISSIBLE:
+			return "Reasonable persons could not reject this principle"
+		elif self == self.IMPERMISSIBLE:
+			return "Reasonable persons would reject this principle"
+		else:
+			# Should not get here...
+			return "No clear agreement among reasonable persons"
+
 __all__ = [
+	'MoralValue',
 	'PhilosophicalMoralValue',
 	'AristotelianMoralValue',
 	'UtilitarianMoralValue',
 	'RossianMoralValue',
 	'NietzscheanMoralValue',
 	'CareMoralValue',
-	'RawlsianMoralValue'
+	'RawlsianMoralValue',
+	'KantianMoralValue',
+	'ContractualistMoralValue'
 ]
