@@ -258,6 +258,7 @@ def main():
 			duties_violated=[]  # no duties violated
 		)
 	)
+	
 	result_charity = engine_runner.run_engines("charitable_donation", context_charity)
 
 	# ------------------------------
@@ -318,6 +319,7 @@ def main():
 			]
 		)
 	)
+	
 	result_mass_surveillance = engine_runner.run_engines("mass_surveillance", context_mass_surveillance)
 
 	engine_runner.display_results("adultery", context_adultery, result_adultery)
@@ -326,6 +328,9 @@ def main():
 	engine_runner.display_results("tell_a_lie", context_lie, result_tell_a_lie)
 	engine_runner.display_results("charitable_donation", context_charity, result_charity)
 	engine_runner.display_results("mass_surveillance", context_mass_surveillance, result_mass_surveillance)
+
+	print("")
+	engine_runner.display_consistency_report()
 	print("")
 
 if __name__ == "__main__":

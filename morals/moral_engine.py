@@ -156,6 +156,7 @@ class RossianEngine(MoralEngine):
 		"""Apply Ross's contextual considerations to duty weights"""
 		
 		# Time horizon affects all duties (future consequences matter)
+		# This is similar to the `effective_utility()` function.
 		time_modifier = {
 			TimeHorizon.SHORT: 0.8,   # Short-term consequences discounted
 			TimeHorizon.MEDIUM: 1.0,   # Standard weighting
@@ -274,20 +275,22 @@ class RawlsianEngine(MoralEngine):
 # ------------------------------
 
 class MoralEngineRunner:
+	consistency_log: list = []
+	engines: dict[str, MoralEngine] = {
+				"Kantian": KantianEngine(),
+				"Utilitarian": UtilitarianEngine(),
+				"Aristotelian": AristotelianEngine(),
+				"Contractualist": ContractualistEngine(),
+				"Rossian": RossianEngine(),
+				"Nietzschean": NietzscheanEngine(),
+				"Ethics of Care": EthicsOfCareEngine(),
+				"Rawlsian": RawlsianEngine(),
+	}
+
 	def run_engines(self, action: str, context: MoralContext):
-		engines = {
-			"Kantian": KantianEngine(),
-			"Utilitarian": UtilitarianEngine(),
-			"Aristotelian": AristotelianEngine(),
-			"Contractualist": ContractualistEngine(),
-			"Rossian": RossianEngine(),
-			"Nietzschean": NietzscheanEngine(),
-			"Ethics of Care": EthicsOfCareEngine(),
-			"Rawlsian": RawlsianEngine(),
-		}
 		
 		results = {}
-		for name, engine in engines.items():
+		for name, engine in self.engines.items():
 			moral_value = engine.evaluate(action, context)
 			results[name] = {
 				'value_obj': moral_value,  # Store the actual enum object
@@ -295,7 +298,61 @@ class MoralEngineRunner:
 				'quality': moral_value.moral_quality(),
 				'core': moral_value.to_core()  # Store the MoralValue enum, not string
 			}
+		
+		# Perform consistency checks after all engines have evaluated
+		self._perform_consistency_checks(action, context, results)
 		return results
+
+	def _perform_consistency_checks(self, action: str, context: MoralContext, results: dict):
+		"""Check for logical inconsistencies between engine evaluations"""
+		
+		# Check 1: Kantian vs Contractualist (both deontological)
+		kantian = results["Kantian"]['core']
+		contractualist = results["Contractualist"]['core']
+		if kantian != contractualist and abs(context.cooperative_outcome.societal_trust_change) < 5:
+			self.consistency_log.append(
+				f"Kantian-Contractualist divergence: {kantian.name} vs {contractualist.name} "
+				f"for action '{action}' with low trust impact"
+			)
+		
+		# Check 2: Utilitarian vs Rawlsian (consequentialist vs justice-focused)
+		utilitarian = results["Utilitarian"]['core']
+		rawlsian = results["Rawlsian"]['core']
+		if utilitarian == MoralValue.GOOD and rawlsian == MoralValue.BAD:
+			# Utility gained through unjust means
+			self.consistency_log.append(
+				f"Utilitarian-Rawlsian tension: Utility achieved through unjust distribution "
+				f"in action '{action}' (net utility: {context.consequences.net_utility})"
+			)
+		
+		# Check 3: Aristotle vs Care Ethics (virtue vs relationship focus)
+		aristotelian = results["Aristotelian"]['core']
+		care = results["Ethics of Care"]['core']
+		if (aristotelian == AristotelianMoralValue.VIRTUOUS and care == CareMoralValue.UNCARING and
+			context.agent.agent_type in [AgentType.FRIEND, AgentType.FAMILY_MEMBER]):
+			self.consistency_log.append(
+				f"Virtue-Care divergence: Virtuous action harms relationships "
+				f"for action '{action}' involving close relations"
+			)
+		
+		# Check 4: Rossian conflicting vs other clear verdicts
+		rossian = results["Rossian"]['value_obj']
+		if (rossian == RossianMoralValue.CONFLICTING and 
+			sum(1 for r in results.values() if r['core'] != MoralValue.NEUTRAL) >= 5):
+			# Most engines agree but Rossian sees conflict
+			self.consistency_log.append(
+				f"Rossian uncertainty: Clear consensus among other engines but "
+				f"Rossian detects duty conflict for action '{action}'"
+			)
+
+	def display_consistency_report(self):
+		"""Display any detected consistency issues"""
+		if self.consistency_log:
+			print(f"\n{'!'*80}")
+			print("CROSS-ENGINE CONSISTENCY REPORT:")
+			print(f"{'!'*80}")
+			for issue in self.consistency_log:
+				print(f"• {issue}")
 
 	def display_results(self, action: str, context: MoralContext, results: dict):
 		"""Display the results with context information for better understanding."""
