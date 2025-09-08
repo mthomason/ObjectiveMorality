@@ -6,7 +6,7 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
-from .moral_context import MoralContext, DutyType, AgentType
+from .moral_context import MoralContext, DutyType, AgentType, RelationshipImpact
 from .moral_value import *
 
 # ------------------------------
@@ -150,6 +150,21 @@ class NietzscheanEngine(MoralEngine):
 				return NietzscheanMoralValue.SLAVE_GOOD
 
 # ------------------------------
+# Ethics of Care Engine
+# ------------------------------
+
+class EthicsOfCareEngine(MoralEngine):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
+		# Focuses on relational impact, not abstract rules or total utility.
+		if (RelationshipImpact.NURTURES in context.trust_impact.impact_type or
+			RelationshipImpact.STRENGTHENS in context.trust_impact.impact_type):
+			return CareMoralValue.CARING
+		elif (RelationshipImpact.EXPLOITS in context.trust_impact.impact_type or RelationshipImpact.WEAKENS in context.trust_impact.impact_type):
+			return CareMoralValue.UNCARING
+		else:
+			return CareMoralValue.NEUTRAL
+
+# ------------------------------
 # Moral Engine Runner
 # ------------------------------
 
@@ -162,6 +177,7 @@ class MoralEngineRunner:
 			"Contractualist": ContractualistEngine(),
 			"Rossian": RossianEngine(),
 			"Nietzschean": NietzscheanEngine(),
+			"Ethics of Care": EthicsOfCareEngine(),
 		}
 	
 		results = {}

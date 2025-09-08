@@ -171,11 +171,37 @@ class NietzscheanMoralValue(PhilosophicalMoralValue):
 		"""Pretty print value with underscore removed."""
 		return self.name.title().replace("_", " ")
 
+class CareMoralValue(PhilosophicalMoralValue):
+	"""
+	Ethics of Care moral valuations focused on relational nurturing.
+	"""
+	CARING = auto()			# Nurtures, maintains, or strengthens relationships
+	UNCARING = auto()		# Harms, exploits, or weakens relationships
+	NEUTRAL = auto()		# No significant impact on relationships
+
+	def to_core(self) -> MoralValue:
+		"""Map care ethics evaluation to core moral values."""
+		if self == self.CARING:
+			return MoralValue.GOOD
+		elif self == self.UNCARING:
+			return MoralValue.BAD
+		else:
+			return MoralValue.NEUTRAL
+
+	def moral_quality(self) -> str:
+		"""Describe the moral quality in care ethics terms."""
+		if self == self.CARING:
+			return "Nurtures and maintains caring relationships"
+		elif self == self.UNCARING:
+			return "Harms or exploits relationships"
+		else:
+			return "Neutral impact on relationships"
 
 __all__ = [
 	'PhilosophicalMoralValue',
 	'AristotelianMoralValue',
 	'UtilitarianMoralValue',
 	'RossianMoralValue',
-	'NietzscheanMoralValue'
+	'NietzscheanMoralValue',
+	'CareMoralValue'
 ]
