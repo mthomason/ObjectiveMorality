@@ -74,11 +74,11 @@ class RossianMoralValue(PhilosophicalMoralValue):
 
 	def moral_quality(self) -> str:
 		if self == self.PERMISSIBLE:
-			return "Permissible"
+			return "All-things-considered duty fulfilled: The balance of prima facie duties favors this action"
 		elif self == self.IMPERMISSIBLE:
-			return "Impermissible"
+			return "All-things-considered duty violated: The balance of prima facie duties prohibits this action"
 		else:
-			return "Conflicting"
+			return "Genuine moral dilemma: Competing prima facie duties are too closely balanced to determine an all-things-considered duty"
 
 class UtilitarianMoralValue(PhilosophicalMoralValue):
 	"""
