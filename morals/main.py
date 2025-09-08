@@ -7,7 +7,7 @@ from pprint import pprint
 
 def main():
 
-	engine = MoralEngineRunner()
+	engine_runner = MoralEngineRunner()
 
 	# ------------------------------
 	# Moral Case: Adultery
@@ -44,7 +44,7 @@ def main():
 		)
 	)
 
-	result_adultery = engine.run_engines("adultery", context_adultery)
+	result_adultery = engine_runner.run_engines("adultery", context_adultery)
 
 	# ------------------------------
 	# Moral Case: Pork Modern
@@ -92,7 +92,7 @@ def main():
 		)
 	)
 
-	result_pork_modern = engine.run_engines("pork_modern", context_pork_modern)
+	result_pork_modern = engine_runner.run_engines("pork_modern", context_pork_modern)
 
 	# ------------------------------
 	# Moral Case: Pork Premodern
@@ -140,16 +140,15 @@ def main():
 		)
 	)
 
-
-	result_pork_premodern = engine.run_engines("pork_premodern", context_pork_premodern)
+	result_pork_premodern = engine_runner.run_engines("pork_premodern", context_pork_premodern)
 
 	# ------------------------------
 	# Moral Case: Tell a Lie
 	# ------------------------------
 
 	context_lie = MoralContext(
-		action_description="Lied to an inquiring official about a friend's whereabouts.",
-	
+		action_description="Lied to an inquiring official about a friend's whereabouts to protect them from potential harm.",
+		
 		universalized_result=UniversalizedResult(
 			self_collapse=True,
 			contradiction_in_will=True
@@ -158,49 +157,106 @@ def main():
 		consequences=Consequences(
 			net_flourishing=10,
 			net_utility=15,
-			individual_impact={"friend": 100, "society": -85},
-			power_expression=-5
+			individual_impact={
+				"friend": 100,		# protected from potential harm
+				"society": -15,		# minor erosion of trust (not -85, too severe for a single lie)
+				"official": -5,		# wasted time/resources
+				"oneself": +5		# maintained friendship integrity, but with moral discomfort
+			},
+			power_expression=-2	 # slightly negative - deception isn't typically power-affirming
 		),
 		
 		cooperative_outcome=CooperativeOutcome(
 			stable=True, 
-			societal_trust_change=-1
+			societal_trust_change=-1  # small negative impact on general trust
 		),
 		
 		trust_impact=TrustImpact(
 			breach=True,
-			relationships_affected=["societal_trust"],
-			impact_type=[RelationshipImpact.BREACHES_TRUST]
+			relationships_affected=["societal_trust", "friendship", "official_citizen_trust"],
+			impact_type=[
+				RelationshipImpact.BREACHES_TRUST,		# to society/official
+				RelationshipImpact.STRENGTHENS,			# to friend
+				RelationshipImpact.NURTURES				# the friendship
+			]
 		),
 		
 		agent=Agent(
 			agent_type=AgentType.FRIEND,
-			virtues=[Virtue.LOYALTY, Virtue.COMPASSION],
+			virtues=[Virtue.LOYALTY, Virtue.COMPASSION, Virtue.COURAGE],  # added courage
 			vices=[Vice.DISHONESTY]
 		),
 		
 		duty_assessment=DutyAssessment(
-			duties_upheld=[DutyType.BENEFICENCE, DutyType.FIDELITY],
-			duties_violated=[DutyType.NON_MALEFICENCE]
+			duties_upheld=[
+				DutyType.BENEFICENCE,
+				DutyType.FIDELITY,
+			],
+			duties_violated=[
+				DutyType.FIDELITY,
+				DutyType.NON_MALEFICENCE
+			]
 		)
 	)
 
-	result_tell_a_lie = engine.run_engines("tell_a_lie", context_lie)
+	result_tell_a_lie = engine_runner.run_engines("tell_a_lie", context_lie)
 
-	print("Adultery")
-	pprint(result_adultery)
-	print("")
+	context_charity = MoralContext(
+		action_description="Donated a significant portion of income to effective charities helping the global poor.",
+		
+		universalized_result=UniversalizedResult(
+			self_collapse=False,		# World where everyone donates would be better
+			contradiction_in_will=False	# Rational beings would will this
+		),
+		
+		consequences=Consequences(
+			net_flourishing=+25,
+			net_utility=+30,
+			individual_impact={
+				"recipients": +80,		# life-changing benefits
+				"donor": -10,			# personal sacrifice
+				"society": +5			# positive externalities
+			},
+			power_expression=+3			# exercising virtue and generosity
+		),
+		
+		cooperative_outcome=CooperativeOutcome(
+			stable=True,
+			societal_trust_change=+2	# strengthens social fabric
+		),
+		
+		trust_impact=TrustImpact(
+			breach=False,
+			relationships_affected=["global_community", "donor_recipient"],
+			impact_type=[
+				RelationshipImpact.BUILDS_TRUST,
+				RelationshipImpact.NURTURES,
+				RelationshipImpact.STRENGTHENS
+			]
+		),
+		
+		agent=Agent(
+			agent_type=AgentType.STRANGER,		# helping distant others
+			virtues=[Virtue.COMPASSION, Virtue.JUSTICE, Virtue.TEMPERANCE],
+			vices=[]							# no vices in charitable giving
+		),
+		
+		duty_assessment=DutyAssessment(
+			duties_upheld=[
+				DutyType.BENEFICENCE,
+				DutyType.JUSTICE,
+				DutyType.GRATITUDE  # if one feels grateful for their position
+			],
+			duties_violated=[]  # no duties violated
+		)
+	)
+	result_charity = engine_runner.run_engines("charitable_donation", context_charity)
 
-	print("Pork Modern")
-	pprint(result_pork_modern)
-	print("")
-
-	print("Pork Premodern")
-	pprint(result_pork_premodern)
-	print("")
-
-	print("Tell a Lie")
-	pprint(result_tell_a_lie)
+	engine_runner.display_results("adultery", result_adultery)
+	engine_runner.display_results("pork_modern", result_pork_modern)
+	engine_runner.display_results("pork_premodern", result_pork_premodern)
+	engine_runner.display_results("tell_a_lie", result_tell_a_lie)
+	engine_runner.display_results("charitable_donation", result_charity)
 	print("")
 
 if __name__ == "__main__":
