@@ -6,8 +6,8 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
-from .moral_context import MoralContext
-from .moral_value import PhilosophicalMoralValue, AristotelianMoralValue, UtilitarianMoralValue
+from .moral_context import MoralContext, DutyType
+from .moral_value import *
 
 # ------------------------------
 # Base Class for Moral Engines
@@ -102,6 +102,29 @@ class ContractualistEngine(MoralEngine):
 			return UtilitarianMoralValue.IMPERMISSIBLE
 		return UtilitarianMoralValue.PERMISSIBLE
 
+class RossianEngine(MoralEngine):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
+		# Define a hierarchy or weighting of duties. Non-maleficence is often strongest.
+		duty_weights = {
+			DutyType.NON_MALEFICENCE: 10,
+			DutyType.FIDELITY: 7,
+			DutyType.JUSTICE: 8,
+			DutyType.BENEFICENCE: 6,
+			DutyType.GRATITUDE: 5,
+			DutyType.REPARATION: 5,
+			DutyType.SELF_IMPROVEMENT: 4,
+		}
+		# Calculate the total "moral weight" of upheld vs. violated duties
+		weight_upheld = sum(duty_weights[d] for d in context.duty_assessment.duties_upheld)
+		weight_violated = sum(duty_weights[d] for d in context.duty_assessment.duties_violated)
+
+		if weight_upheld > weight_violated:
+			return RossianMoralValue.PERMISSIBLE # Right action
+		elif weight_upheld < weight_violated:
+			return RossianMoralValue.IMPERMISSIBLE # Wrong action
+		else:
+			return RossianMoralValue.CONFLICTING
+
 # ------------------------------
 # Moral Engine Runner
 # ------------------------------
@@ -113,6 +136,7 @@ class MoralEngineRunner:
 			"Utilitarian": UtilitarianEngine(),
 			"Aristotelian": AristotelianEngine(),
 			"Contractualist": ContractualistEngine(),
+			"Rossian": RossianEngine(),
 		}
 	
 		results = {}

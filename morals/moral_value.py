@@ -55,6 +55,31 @@ class PhilosophicalMoralValue(ABC, Enum, metaclass=AbcEnumMeta):
 		"""Pretty print value."""
 		return self.name.title()
 
+class RossianMoralValue(PhilosophicalMoralValue):
+	"""
+	A Rossian moral state.
+	"""
+	PERMISSIBLE = auto()
+	IMPERMISSIBLE = auto()
+	CONFLICTING = auto()
+
+	def to_core(self) -> MoralValue:
+		"""Map Rossian evaluation to core moral values."""
+		if self == self.PERMISSIBLE:
+			return MoralValue.GOOD
+		elif self == self.IMPERMISSIBLE:
+			return MoralValue.BAD
+		else:
+			return MoralValue.NEUTRAL
+
+	def moral_quality(self) -> str:
+		if self == self.PERMISSIBLE:
+			return "Permissible"
+		elif self == self.IMPERMISSIBLE:
+			return "Impermissible"
+		else:
+			return "Conflicting"
+
 class UtilitarianMoralValue(PhilosophicalMoralValue):
 	"""
 	A utilitarian moral state.
@@ -79,7 +104,6 @@ class UtilitarianMoralValue(PhilosophicalMoralValue):
 			return "Impermissible"
 		else:
 			return "Neutral"
-
 
 class AristotelianMoralValue(PhilosophicalMoralValue):
 	"""
@@ -111,3 +135,10 @@ class AristotelianMoralValue(PhilosophicalMoralValue):
 			return "Weakness of will (wrong action + right desire)"
 		else:
 			raise ValueError(f"Unknown value: {self}")
+
+__all__ = [
+	'PhilosophicalMoralValue',
+	'AristotelianMoralValue',
+	'UtilitarianMoralValue',
+	'RossianMoralValue'
+]
