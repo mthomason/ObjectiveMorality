@@ -322,12 +322,122 @@ def main():
 	
 	result_mass_surveillance = engine_runner.run_engines("mass_surveillance", context_mass_surveillance)
 
+	# ------------------------------
+	# Moral Case: Trolley Problem - Switch Variant
+	# ------------------------------
+
+	context_trolley_switch = MoralContext(
+		action_description="Pulled a lever to divert a runaway trolley onto a side track, resulting in one death but saving five people.",
+		
+		universalized_result=UniversalizedResult(
+			self_collapse=False,			# Universalizing minimizing harm doesn't cause contradiction
+			contradiction_in_will=False
+		),
+		
+		consequences=Consequences(
+			net_flourishing=+4,				# 5 lives saved - 1 life lost = +4
+			net_utility=+4,
+			time_horizon=TimeHorizon.LONG,
+			individual_impact={
+				"saved_people": +5,
+				"person_on_side_track": -1,
+				"decision_maker": -2		# Emotional burden
+			},
+			power_expression=+3				# Taking control of situation
+		),
+		
+		cooperative_outcome=CooperativeOutcome(
+			stable=True,
+			societal_trust_change=0			# No direct impact on social trust
+		),
+		
+		trust_impact=TrustImpact(
+			breach=False,
+			relationships_affected=[],
+			impact_type=[]
+		),
+		
+		agent=Agent(
+			agent_type=AgentType.STRANGER,
+			virtues=[Virtue.COURAGE, Virtue.JUSTICE],
+			vices=[]
+		),
+		
+		duty_assessment=DutyAssessment(
+			duties_upheld=[
+				DutyType.BENEFICENCE,		# Saving lives
+				DutyType.JUSTICE			# Minimizing overall harm
+			],
+			duties_violated=[
+				DutyType.NON_MALEFICENCE	# Causing one death
+			]
+		)
+	)
+
+	result_trolley_switch = engine_runner.run_engines("trolley_switch", context_trolley_switch)
+
+	# ------------------------------
+	# Moral Case: Trolley Problem - Fat Man Variant
+	# ------------------------------
+
+	context_trolley_fat_man = MoralContext(
+		action_description="Pushed a large person off a bridge to stop a runaway trolley, resulting in their death but saving five people.",
+		
+		universalized_result=UniversalizedResult(
+			self_collapse=True,				# Universalizing killing innocent people causes contradiction
+			contradiction_in_will=True		# No rational being would will this
+		),
+		
+		consequences=Consequences(
+			net_flourishing=+4,				# Same net utility as switch variant
+			net_utility=+4,
+			time_horizon=TimeHorizon.LONG,
+			individual_impact={
+				"saved_people": +5,
+				"pushed_person": -1,
+				"decision_maker": -5		# Greater emotional burden (more direct involvement)
+			},
+			power_expression=-2				# Using someone as mere means
+		),
+		
+		cooperative_outcome=CooperativeOutcome(
+			stable=False,
+			societal_trust_change=-3		# Erodes trust in public safety
+		),
+		
+		trust_impact=TrustImpact(
+			breach=True,
+			relationships_affected=["social_trust"],
+			impact_type=[RelationshipImpact.BREACHES_TRUST, RelationshipImpact.WEAKENS]
+		),
+		
+		agent=Agent(
+			agent_type=AgentType.STRANGER,
+			virtues=[Virtue.JUSTICE],		# Trying to minimize harm
+			vices=[Vice.CRUELTY]			# Directly causing harm
+		),
+		
+		duty_assessment=DutyAssessment(
+			duties_upheld=[
+				DutyType.BENEFICENCE		# Saving lives
+			],
+			duties_violated=[
+				DutyType.NON_MALEFICENCE,	# Directly killing someone
+				DutyType.JUSTICE			# Using someone as mere means
+			]
+		)
+	)
+
+	result_trolley_fat_man = engine_runner.run_engines("trolley_fat_man", context_trolley_fat_man)
+
 	engine_runner.display_results("adultery", context_adultery, result_adultery)
 	engine_runner.display_results("pork_modern", context_pork_modern, result_pork_modern)
 	engine_runner.display_results("pork_premodern", context_pork_premodern, result_pork_premodern)
 	engine_runner.display_results("tell_a_lie", context_lie, result_tell_a_lie)
 	engine_runner.display_results("charitable_donation", context_charity, result_charity)
 	engine_runner.display_results("mass_surveillance", context_mass_surveillance, result_mass_surveillance)
+	engine_runner.display_results("trolley_switch", context_trolley_switch, result_trolley_switch)
+	engine_runner.display_results("trolley_fat_man", context_trolley_fat_man, result_trolley_fat_man)
 
 	print("")
 	engine_runner.display_consistency_report()
