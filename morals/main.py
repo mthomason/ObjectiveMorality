@@ -320,12 +320,12 @@ def main():
 	)
 	result_mass_surveillance = engine_runner.run_engines("mass_surveillance", context_mass_surveillance)
 
-	engine_runner.display_results("adultery", result_adultery)
-	engine_runner.display_results("pork_modern", result_pork_modern)
-	engine_runner.display_results("pork_premodern", result_pork_premodern)
-	engine_runner.display_results("tell_a_lie", result_tell_a_lie)
-	engine_runner.display_results("charitable_donation", result_charity)
-	engine_runner.display_results("mass_surveillance", result_mass_surveillance)
+	engine_runner.display_results("adultery", context_adultery, result_adultery)
+	engine_runner.display_results("pork_modern", context_pork_modern, result_pork_modern)
+	engine_runner.display_results("pork_premodern", context_pork_premodern, result_pork_premodern)
+	engine_runner.display_results("tell_a_lie", context_lie, result_tell_a_lie)
+	engine_runner.display_results("charitable_donation", context_charity, result_charity)
+	engine_runner.display_results("mass_surveillance", context_mass_surveillance, result_mass_surveillance)
 	print("")
 
 if __name__ == "__main__":

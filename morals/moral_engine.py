@@ -297,11 +297,36 @@ class MoralEngineRunner:
 			}
 		return results
 
-	def display_results(self, action: str, results: dict):
-		"""Display the results in a rich, formatted way."""
-		print(f"\n{'='*60}")
+	def display_results(self, action: str, context: MoralContext, results: dict):
+		"""Display the results with context information for better understanding."""
+		print(f"\n{'='*80}")
 		print(f"MORAL ANALYSIS: {action.upper()}")
-		print(f"{'='*60}")
+		print(f"{'='*80}")
+		
+		# Display context information first
+		print(f"\nCONTEXT:")
+		print(f"  Action: {context.action_description}")
+		print(f"  Universalization: Self-collapse={context.universalized_result.self_collapse}, "
+			  f"Contradiction={context.universalized_result.contradiction_in_will}")
+		print(f"  Consequences: Net flourishing={context.consequences.net_flourishing}, "
+			  f"Net utility={context.consequences.net_utility}")
+		print(f"  Time horizon: {context.consequences.time_horizon.name}")
+		print(f"  Power expression: {context.consequences.power_expression}")
+		print(f"  Cooperative outcome: Stable={context.cooperative_outcome.stable}, "
+			  f"Trust change={context.cooperative_outcome.societal_trust_change}")
+		print(f"  Trust impact: Breach={context.trust_impact.breach}, "
+			  f"Relationships affected={context.trust_impact.relationships_affected}")
+		print(f"  Agent: Type={context.agent.agent_type.name}, "
+			  f"Virtues={[v.name for v in context.agent.virtues]}, "
+			  f"Vices={[v.name for v in context.agent.vices]}")
+		print(f"  Duties: Upheld={[d.name for d in context.duty_assessment.duties_upheld]}, "
+			  f"Violated={[d.name for d in context.duty_assessment.duties_violated]}")
+		
+		# Individual impacts (if any)
+		if context.consequences.individual_impact:
+			print(f"  Individual impacts:")
+			for entity, impact in context.consequences.individual_impact.items():
+				print(f"	{entity}: {impact:+d}")
 		
 		# Group by core moral value ENUM for quick overview
 		core_groups: dict[MoralValue, list] = {
@@ -311,10 +336,12 @@ class MoralEngineRunner:
 		}
 		
 		for philosopher, data in results.items():
-			core_value = data['core']  # This is now the MoralValue enum
+			core_value = data['core']
 			core_groups[core_value].append(f"  {philosopher:.<25}: {data['value_str']}")
 		
-		print("\nQUICK CONSENSUS:")
+		print(f"\n{'─'*80}")
+		print("QUICK CONSENSUS:")
+		print(f"{'─'*80}")
 		print(f"✓ GOOD ({len(core_groups[MoralValue.GOOD])}):")
 		for item in core_groups[MoralValue.GOOD]:
 			print(f"   {item}")
@@ -329,20 +356,20 @@ class MoralEngineRunner:
 			for item in core_groups[MoralValue.NEUTRAL]:
 				print(f"   {item}")
 		
-		print(f"\n{'─'*60}")
+		print(f"\n{'─'*80}")
 		print("DETAILED ANALYSIS:")
-		print(f"{'─'*60}")
+		print(f"{'─'*80}")
 		
 		for philosopher, data in results.items():
 			print(f"\n{philosopher}:")
 			print(f"  Verdict: {data['value_str']}")
 			print(f"  Meaning: {data['quality']}")
-			print(f"  Core: {data['core'].name}")  # Use .name for the enum constant name
+			print(f"  Core: {data['core'].name}")
 		
 		# Optional: Show the core moral value mapping
-		print(f"\n{'─'*60}")
+		print(f"\n{'─'*80}")
 		print("CORE MORAL VALUE MAPPING:")
-		print(f"{'─'*60}")
+		print(f"{'─'*80}")
 		core_summary: dict = {}
 		for philosopher, data in results.items():
 			core_value = data['core']
