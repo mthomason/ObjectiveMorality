@@ -19,6 +19,7 @@ def main():
 		consequences=Consequences(
 			net_flourishing=-15,
 			net_utility=-20,
+			time_horizon=TimeHorizon.LONG,
 			individual_impact={
 				"betrayed_spouse": -50, 
 				"community_trust": -30,
@@ -61,6 +62,7 @@ def main():
 		consequences=Consequences(
 			net_flourishing=+8,
 			net_utility=+10,
+			time_horizon=TimeHorizon.MEDIUM,
 			individual_impact={
 				"eater": +15,  # nutrition and pleasure
 				"farmer": +5,   # economic benefit
@@ -109,6 +111,7 @@ def main():
 		consequences=Consequences(
 			net_flourishing=-12,
 			net_utility=-15,
+			time_horizon=TimeHorizon.MEDIUM,
 			individual_impact={
 				"eater": -20,  # illness and suffering
 				"family": -10,  # burden of care
@@ -201,6 +204,10 @@ def main():
 
 	result_tell_a_lie = engine_runner.run_engines("tell_a_lie", context_lie)
 
+	# ------------------------------
+	# Moral Case: Charity
+	# ------------------------------
+
 	context_charity = MoralContext(
 		action_description="Donated a significant portion of income to effective charities helping the global poor.",
 		
@@ -212,6 +219,7 @@ def main():
 		consequences=Consequences(
 			net_flourishing=+25,
 			net_utility=+30,
+			time_horizon=TimeHorizon.LONG,
 			individual_impact={
 				"recipients": +80,		# life-changing benefits
 				"donor": -10,			# personal sacrifice
@@ -252,6 +260,10 @@ def main():
 	)
 	result_charity = engine_runner.run_engines("charitable_donation", context_charity)
 
+	# ------------------------------
+	# Moral Case: Mass Surveillance
+	# ------------------------------
+
 	context_mass_surveillance = MoralContext(
 		action_description="Implemented mass surveillance program collecting data on all citizens without individualized warrants, justified by national security claims.",
 		
@@ -263,6 +275,7 @@ def main():
 		consequences=Consequences(
 			net_flourishing=-15,			# Chilling effect on free expression, self-censorship
 			net_utility=-5,					# Mixed: some security benefits vs massive privacy costs
+			time_horizon=TimeHorizon.LONG,
 			individual_impact={
 				"citizens": -30,			# Loss of privacy, autonomy, trust
 				"government": +10,			# Increased perceived security, power

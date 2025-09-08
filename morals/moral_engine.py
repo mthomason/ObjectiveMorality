@@ -6,7 +6,7 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
-from .moral_context import MoralContext, DutyType, AgentType, RelationshipImpact
+from .moral_context import MoralContext, DutyType, AgentType, RelationshipImpact, TimeHorizon
 from .moral_value import *
 
 # ------------------------------
@@ -39,7 +39,7 @@ class UtilitarianEngine(MoralEngine):
 		"""
 		Action is right if net flourishing > 0
 		"""
-		net_value: int = context.consequences.net_utility
+		net_value: int = context.consequences.effective_utility()
 		if net_value == 0:
 			net_value = context.consequences.net_flourishing
 
@@ -64,6 +64,12 @@ class AristotelianEngine(MoralEngine):
 		stable: bool = context.cooperative_outcome.stable
 		has_virtues: bool = len(context.agent.virtues) > 0
 		has_vices: bool = len(context.agent.vices) > 0
+
+		# Long-term negative consequences might indicate vice even if short-term looks good
+		if (context.consequences.net_flourishing > 0 and
+			context.consequences.time_horizon == TimeHorizon.SHORT and
+			context.consequences.effective_utility() < 0):
+			return AristotelianMoralValue.INCONTINENT	# Short-sighted action
 
 		if net_flourishing < 0 and not stable:
 			return AristotelianMoralValue.VICIOUS
@@ -108,14 +114,19 @@ class ContractualistEngine(MoralEngine):
 
 class RossianEngine(MoralEngine):
 	def evaluate(self, action, context) -> PhilosophicalMoralValue:
+		"""
+		Ross's intuitionist pluralism: Duties are prima facie obligations
+		that must be weighed against each other in specific contexts.
+		"""
 		# Context-sensitive duty weights
 		duty_weights = self._calculate_contextual_weights(context)
 
+		# Sum the stringency of upheld vs. violated duties
 		weight_upheld = sum(duty_weights[d] for d in context.duty_assessment.duties_upheld)
 		weight_violated = sum(duty_weights[d] for d in context.duty_assessment.duties_violated)
 
 		# Add margin for Ross's "moral uncertainty"
-		if abs(weight_upheld - weight_violated) < 3:  # Too close to call
+		if abs(weight_upheld - weight_violated) < self._get_uncertainty_threshold(context):
 			return RossianMoralValue.CONFLICTING
 		elif weight_upheld > weight_violated:
 			return RossianMoralValue.PERMISSIBLE
@@ -123,22 +134,63 @@ class RossianEngine(MoralEngine):
 			return RossianMoralValue.IMPERMISSIBLE
 
 	def _calculate_contextual_weights(self, context: MoralContext) -> dict[DutyType, int]:
-		"""Duty stringency depends on context - this is key to Ross's theory"""
-		base_weights = {
-			DutyType.NON_MALEFICENCE: 10,
-			DutyType.FIDELITY: 7,
-			DutyType.JUSTICE: 8,
-			DutyType.BENEFICENCE: 6,
-			DutyType.GRATITUDE: 5,
-			DutyType.REPARATION: 5,
-			DutyType.SELF_IMPROVEMENT: 4,
+		"""
+		Ross's duty weighting considers:
+		1. Basic stringency of duty types
+		2. Contextual factors that modify duty strength
+		3. Special obligations based on relationships
+		"""
+		weights = {
+			DutyType.NON_MALEFICENCE: 12,	# Most stringent (do no harm)
+			DutyType.JUSTICE: 10,			# Fairness and distribution
+			DutyType.FIDELITY: 9,			# Promise-keeping and honesty
+			DutyType.REPARATION: 8,			# Correcting past wrongs
+			DutyType.GRATITUDE: 7,			# Repaying benefits received
+			DutyType.BENEFICENCE: 6,		# Helping others
+			DutyType.SELF_IMPROVEMENT: 5,	# Improving oneself
 		}
+		self._apply_contextual_modifiers(weights, context)
+		return weights
 
-		# Adjust based on context (example logic)
+	def _apply_contextual_modifiers(self, weights: dict, context: MoralContext):
+		"""Apply Ross's contextual considerations to duty weights"""
+		
+		# Time horizon affects all duties (future consequences matter)
+		time_modifier = {
+			TimeHorizon.SHORT: 0.8,   # Short-term consequences discounted
+			TimeHorizon.MEDIUM: 1.0,   # Standard weighting
+			TimeHorizon.LONG: 1.2	  # Long-term consequences emphasized
+		}[context.consequences.time_horizon]
+		
+		for duty in weights:
+			weights[duty] = int(weights[duty] * time_modifier)
+		
+		# Relationship-based modifiers (Ross emphasized special obligations)
+		if context.agent.agent_type in [AgentType.FRIEND, AgentType.FAMILY_MEMBER]:
+			weights[DutyType.FIDELITY] += 3   # Stronger fidelity to close relations
+			weights[DutyType.GRATITUDE] += 2  # Stronger gratitude to intimates
+		
+		# Harm severity amplifies non-maleficence
 		if context.consequences.net_utility < -10:
-			base_weights[DutyType.NON_MALEFICENCE] += 5  # Harm prevention becomes more urgent
+			weights[DutyType.NON_MALEFICENCE] += 4
+		
+		# Significant injustice amplifies justice duty
+		if context.cooperative_outcome.societal_trust_change < -5:
+			weights[DutyType.JUSTICE] += 3
 
-		return base_weights
+	def _get_uncertainty_threshold(self, context: MoralContext) -> int:
+		"""
+		Ross acknowledged moral decisions often involve uncertain weighing
+		of competing duties. This threshold reflects that uncertainty.
+		"""
+		# More complex situations have higher uncertainty
+		complexity_factor = (len(context.duty_assessment.duties_upheld) + 
+						   len(context.duty_assessment.duties_violated))
+		
+		# Conflicting relationships increase uncertainty
+		relationship_complexity = len(context.trust_impact.relationships_affected)
+		
+		return 2 + complexity_factor + relationship_complexity
 
 # ------------------------------
 # Nietzschean Engine

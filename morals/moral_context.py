@@ -72,6 +72,9 @@ class RelationshipImpact(Enum):
 	BUILDS_TRUST = auto()
 
 class TimeHorizon(Enum):
+	"""
+	Time horizon type. This is used for calculating `effective_utility()` from `net_utility`.
+	"""
 	SHORT = auto()
 	MEDIUM = auto()
 	LONG = auto()

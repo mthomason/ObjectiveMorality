@@ -140,10 +140,12 @@ class NietzscheanMoralValue(PhilosophicalMoralValue):
 	"""
 	Nietzsche's moral valuations based on master vs. slave morality and will to power.
 	"""
-	MASTER_GOOD = auto()	# Life-affirming, noble, powerful (for the exceptional)
-	MASTER_BAD = auto()		# Life-denying, contemptible, weak (for the exceptional)
-	SLAVE_GOOD = auto()		# Meek, humble, pious (from perspective of slave morality)
-	SLAVE_BAD = auto()		# Proud, powerful, selfish (from perspective of slave morality)
+	MASTER_GOOD = auto()			# Life-affirming, noble, powerful (for the exceptional)
+	MASTER_BAD = auto()				# Life-denying, contemptible, weak (for the exceptional)
+	SLAVE_GOOD = auto()				# Meek, humble, pious (from perspective of slave morality)
+	SLAVE_BAD = auto()				# Proud, powerful, selfish (from perspective of slave morality)
+	# DESCRIPTIVE_SLAVE_GOOD = auto()	# "This is considered good in slave morality"
+	# EVALUATIVE_SLAVE_BAD = auto()		# "But I critique it as life-denying"
 
 	def to_core(self) -> MoralValue:
 		"""Map Nietzsche's evaluation to core moral values."""
