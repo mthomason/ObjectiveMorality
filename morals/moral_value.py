@@ -15,7 +15,7 @@ class MoralValue(Enum):
 	"""
 	GOOD = auto()			# Good, excellent, permissible, righteous
 	BAD = auto()			# Bad, impermissible, vicious, corrupt
-	NEUTRAL = auto()	# Permissible... the continent state
+	NEUTRAL = auto()		# Permissible... the continent state
 
 	def is_positive(self):
 		return self == self.GOOD
@@ -71,6 +71,14 @@ class UtilitarianMoralValue(PhilosophicalMoralValue):
 			return MoralValue.BAD
 		else:
 			return MoralValue.NEUTRAL
+
+	def moral_quality(self) -> str:
+		if self == self.PERMISSIBLE:
+			return "Permissible"
+		elif self == self.IMPERMISSIBLE:
+			return "Impermissible"
+		else:
+			return "Neutral"
 
 
 class AristotelianMoralValue(PhilosophicalMoralValue):
