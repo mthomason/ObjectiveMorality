@@ -71,6 +71,11 @@ class RelationshipImpact(Enum):
 	BREACHES_TRUST = auto()
 	BUILDS_TRUST = auto()
 
+class TimeHorizon(Enum):
+	SHORT = auto()
+	MEDIUM = auto()
+	LONG = auto()
+
 @dataclass(frozen=True)
 class UniversalizedResult:
 	"""
@@ -94,6 +99,7 @@ class Consequences:
 	net_utility: int = 0
 	power_expression: int = 0	# Nietzschean metric
 	individual_impact: dict[str, int] = field(default_factory=dict)
+	time_horizon: TimeHorizon = TimeHorizon.MEDIUM
 
 	def __post_init__(self):
 		if not isinstance(self.net_flourishing, int):
@@ -102,6 +108,17 @@ class Consequences:
 			raise TypeError("net_utility must be an integer")
 		if not isinstance(self.power_expression, int):
 			raise TypeError("power_expression must be an integer")
+		if not isinstance(self.time_horizon, TimeHorizon):
+			raise TypeError("time_horizon must be type TimeHorizon")
+	
+	def effective_utility(self) -> int:
+		"""Discount future utility appropriately"""
+		if self.time_horizon == TimeHorizon.SHORT:
+			return self.net_utility
+		elif self.time_horizon == TimeHorizon.MEDIUM:
+			return int(self.net_utility * 0.8)
+		else:  # TimeHorizon.LONG
+			return int(self.net_utility * 0.6)
 
 @dataclass(frozen=True)
 class CooperativeOutcome:
@@ -194,5 +211,6 @@ __all__ = [
 	'Vice',
 	'DutyType',
 	'AgentType',
-	'RelationshipImpact'
+	'RelationshipImpact',
+	'TimeHorizon'
 ]
