@@ -26,7 +26,7 @@ class KantianEngine(MoralEngine):
 		"""
 		Action is wrong if universalizing it causes contradiction.
 		"""
-		if context.universalized_result.self_collapse:
+		if context.universalized_result.self_collapse or context.universalized_result.contradiction_in_will:
 			return UtilitarianMoralValue.IMPERMISSIBLE
 		return UtilitarianMoralValue.PERMISSIBLE
 
@@ -39,9 +39,13 @@ class UtilitarianEngine(MoralEngine):
 		"""
 		Action is right if net flourishing > 0
 		"""
-		if context.consequences.net_flourishing > 0:
+		net_value: int = context.consequences.net_utility
+		if net_value == 0:
+			net_value = context.consequences.net_flourishing
+
+		if net_value > 0:
 			return UtilitarianMoralValue.PERMISSIBLE
-		elif context.consequences.net_flourishing < 0:
+		elif net_value < 0:
 			return UtilitarianMoralValue.IMPERMISSIBLE
 		else:
 			return UtilitarianMoralValue.NEUTRAL
@@ -56,12 +60,33 @@ class AristotelianEngine(MoralEngine):
 		Action is virtuous if it aligns with flourishing life & stable character.
 		Uses consequences + trust + social stability as proxies.
 		"""
-		if context.consequences.net_flourishing > 0 and context.cooperative_outcome.stable:
-			return AristotelianMoralValue.VIRTUOUS
-		elif context.consequences.net_flourishing < 0:
+		net_flourishing: int = context.consequences.net_flourishing
+		stable: bool = context.cooperative_outcome.stable
+		has_virtues: bool = len(context.agent.virtues) > 0
+		has_vices: bool = len(context.agent.vices) > 0
+
+		if net_flourishing < 0 and not stable:
 			return AristotelianMoralValue.VICIOUS
-		else:
-			return AristotelianMoralValue.CONTINENT
+		elif net_flourishing < 0:
+			if has_vices:
+				return AristotelianMoralValue.VICIOUS
+			else:
+				return AristotelianMoralValue.INCONTINENT
+		elif net_flourishing > 0 and stable:
+			if has_virtues and not has_vices:
+				return AristotelianMoralValue.VIRTUOUS
+			else:
+				return AristotelianMoralValue.CONTINENT
+		elif net_flourishing > 0 and not stable:
+			if has_virtues:
+				return AristotelianMoralValue.CONTINENT
+			else:
+				return AristotelianMoralValue.INCONTINENT
+		else: # net_flourishing == 0
+			if stable:
+				return AristotelianMoralValue.CONTINENT
+			else:
+				return AristotelianMoralValue.INCONTINENT
 
 # ------------------------------
 # Contractualist Engine
@@ -73,7 +98,7 @@ class ContractualistEngine(MoralEngine):
 		Action is wrong if reasonable persons behind a veil of ignorance
 		would reject the rule permitting it.
 		"""
-		if context.trust_impact.breach:
+		if context.trust_impact.breach or context.cooperative_outcome.societal_trust_change < 0:
 			return UtilitarianMoralValue.IMPERMISSIBLE
 		return UtilitarianMoralValue.PERMISSIBLE
 
