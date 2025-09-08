@@ -6,8 +6,20 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
+import json
 from dataclasses import dataclass, field
 from enum import Enum, auto
+from typing import TypeVar, Any
+
+T = TypeVar('T')
+
+class JSONEncoder(json.JSONEncoder):
+	def default(self, obj):
+		if isinstance(obj, Enum):
+			return obj.name
+		if hasattr(obj, 'to_dict'):
+			return obj.to_dict()
+		return super().default(obj)
 
 # Enums Defining Types and Categories
 
@@ -24,6 +36,10 @@ class AgentType(Enum):
 	VIRTUOUS = auto()
 	VICIOUS = auto()
 
+	@classmethod
+	def from_str(cls, value: str) -> 'AgentType':
+		return cls[value]
+
 class Virtue(Enum):
 	"""
 	A list of positive character traits (Aristotelian virtues).
@@ -35,6 +51,10 @@ class Virtue(Enum):
 	JUSTICE = auto()
 	TEMPERANCE = auto()
 	WISDOM = auto()
+
+	@classmethod
+	def from_str(cls, value: str) -> 'Virtue':
+		return cls[value]
 
 class Vice(Enum):
 	"""
@@ -48,6 +68,10 @@ class Vice(Enum):
 	INDULGENCE = auto()
 	FOOLISHNESS = auto()
 
+	@classmethod
+	def from_str(cls, value: str) -> 'Vice':
+		return cls[value]
+
 class DutyType(Enum):
 	"""
 	W.D. Ross's Prima Facie duties.
@@ -60,6 +84,10 @@ class DutyType(Enum):
 	SELF_IMPROVEMENT = auto()	# Duty to improve oneself
 	NON_MALEFICENCE = auto()	# Duty to avoid harming others
 
+	@classmethod
+	def from_str(cls, value: str) -> 'DutyType':
+		return cls[value]
+
 class RelationshipImpact(Enum):
 	"""
 	Types of impacts for an Ethics of Care framework.
@@ -71,6 +99,10 @@ class RelationshipImpact(Enum):
 	BREACHES_TRUST = auto()
 	BUILDS_TRUST = auto()
 
+	@classmethod
+	def from_str(cls, value: str) -> 'RelationshipImpact':
+		return cls[value]
+
 class TimeHorizon(Enum):
 	"""
 	Time horizon type. This is used for calculating `effective_utility()` from `net_utility`.
@@ -78,6 +110,10 @@ class TimeHorizon(Enum):
 	SHORT = auto()
 	MEDIUM = auto()
 	LONG = auto()
+
+	@classmethod
+	def from_str(cls, value: str) -> 'TimeHorizon':
+		return cls[value]
 
 @dataclass(frozen=True)
 class UniversalizedResult:
@@ -92,6 +128,19 @@ class UniversalizedResult:
 			raise TypeError("self_collapse must be a boolean")
 		if not isinstance(self.contradiction_in_will, bool):
 			raise TypeError("contradiction_in_will must be a boolean")
+
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'self_collapse': self.self_collapse,
+			'contradiction_in_will': self.contradiction_in_will
+		}
+	
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'UniversalizedResult':
+		return cls(
+			self_collapse=data['self_collapse'],
+			contradiction_in_will=data['contradiction_in_will']
+		)
 
 @dataclass(frozen=True)
 class Consequences:
@@ -123,6 +172,25 @@ class Consequences:
 		else:  # TimeHorizon.LONG
 			return int(self.net_utility * 0.6)
 
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'net_flourishing': self.net_flourishing,
+			'net_utility': self.net_utility,
+			'power_expression': self.power_expression,
+			'individual_impact': self.individual_impact,
+			'time_horizon': self.time_horizon.name
+		}
+	
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'Consequences':
+		return cls(
+			net_flourishing=data['net_flourishing'],
+			net_utility=data['net_utility'],
+			power_expression=data['power_expression'],
+			individual_impact=data['individual_impact'],
+			time_horizon=TimeHorizon.from_str(data['time_horizon'])
+		)
+
 @dataclass(frozen=True)
 class CooperativeOutcome:
 	"""
@@ -137,6 +205,19 @@ class CooperativeOutcome:
 		if not isinstance(self.societal_trust_change, int):
 			raise TypeError("societal_trust_change must be a integer")
 
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'stable': self.stable,
+			'societal_trust_change': self.societal_trust_change
+		}
+	
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'CooperativeOutcome':
+		return cls(
+			stable=data['stable'],
+			societal_trust_change=data['societal_trust_change']
+		)
+
 @dataclass(frozen=True)
 class TrustImpact:
 	"""
@@ -149,6 +230,21 @@ class TrustImpact:
 	def __post_init__(self):
 		if not isinstance(self.breach, bool):
 			raise TypeError("breach must be a boolean")
+
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'breach': self.breach,
+			'relationships_affected': self.relationships_affected,
+			'impact_type': [impact.name for impact in self.impact_type]
+		}
+
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'TrustImpact':
+		return cls(
+			breach=data['breach'],
+			relationships_affected=data['relationships_affected'],
+			impact_type=[RelationshipImpact.from_str(impact) for impact in data['impact_type']]
+		)
 
 @dataclass(frozen=True)
 class Agent:
@@ -163,6 +259,21 @@ class Agent:
 		if not isinstance(self.agent_type, AgentType):
 			raise TypeError("agent_type must be an AgentType type")
 
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'agent_type': self.agent_type.name,
+			'virtues': [virtue.name for virtue in self.virtues],
+			'vices': [vice.name for vice in self.vices]
+		}
+	
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'Agent':
+		return cls(
+			agent_type=AgentType.from_str(data['agent_type']),
+			virtues=[Virtue.from_str(virtue) for virtue in data['virtues']],
+			vices=[Vice.from_str(vice) for vice in data['vices']]
+		)
+
 @dataclass(frozen=True)
 class DutyAssessment:
 	"""
@@ -170,6 +281,19 @@ class DutyAssessment:
 	"""
 	duties_upheld: list[DutyType] = field(default_factory=list)
 	duties_violated: list[DutyType] = field(default_factory=list)
+
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'duties_upheld': [duty.name for duty in self.duties_upheld],
+			'duties_violated': [duty.name for duty in self.duties_violated]
+		}
+	
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'DutyAssessment':
+		return cls(
+			duties_upheld=[DutyType.from_str(duty) for duty in data['duties_upheld']],
+			duties_violated=[DutyType.from_str(duty) for duty in data['duties_violated']]
+		)
 
 @dataclass(frozen=True)
 class MoralContext:
@@ -202,6 +326,41 @@ class MoralContext:
 		if not isinstance(self.action_description, str):
 			raise TypeError("action_description must be a string")
 
+	def to_dict(self) -> dict[str, Any]:
+		return {
+			'action_description': self.action_description,
+			'universalized_result': self.universalized_result.to_dict(),
+			'consequences': self.consequences.to_dict(),
+			'cooperative_outcome': self.cooperative_outcome.to_dict(),
+			'trust_impact': self.trust_impact.to_dict(),
+			'agent': self.agent.to_dict(),
+			'duty_assessment': self.duty_assessment.to_dict()
+		}
+	
+	@classmethod
+	def from_dict(cls, data: dict[str, Any]) -> 'MoralContext':
+		return cls(
+			action_description=data['action_description'],
+			universalized_result=UniversalizedResult.from_dict(data['universalized_result']),
+			consequences=Consequences.from_dict(data['consequences']),
+			cooperative_outcome=CooperativeOutcome.from_dict(data['cooperative_outcome']),
+			trust_impact=TrustImpact.from_dict(data['trust_impact']),
+			agent=Agent.from_dict(data['agent']),
+			duty_assessment=DutyAssessment.from_dict(data['duty_assessment'])
+		)
+	
+	def to_json(self, filepath: str) -> None:
+		"""Save MoralContext to JSON file"""
+		with open(filepath, 'w', encoding='utf-8') as f:
+			json.dump(self.to_dict(), f, indent=2, cls=JSONEncoder, ensure_ascii=False)
+	
+	@classmethod
+	def from_json(cls, filepath: str) -> 'MoralContext':
+		"""Load MoralContext from JSON file"""
+		with open(filepath, 'r', encoding='utf-8') as f:
+			data = json.load(f)
+		return cls.from_dict(data)
+
 __all__ = [
 	'MoralContext',
 	'TrustImpact',
@@ -215,5 +374,6 @@ __all__ = [
 	'DutyType',
 	'AgentType',
 	'RelationshipImpact',
-	'TimeHorizon'
+	'TimeHorizon',
+	'JSONEncoder'
 ]

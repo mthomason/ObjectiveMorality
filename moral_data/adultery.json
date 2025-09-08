@@ -1,0 +1,51 @@
+{
+  "action_description": "Engaged in sexual relations with someone else's spouse.",
+  "universalized_result": {
+    "self_collapse": true,
+    "contradiction_in_will": true
+  },
+  "consequences": {
+    "net_flourishing": -15,
+    "net_utility": -20,
+    "power_expression": -5,
+    "individual_impact": {
+      "betrayed_spouse": -50,
+      "community_trust": -30,
+      "children": -40,
+      "adulterer": 10
+    },
+    "time_horizon": "LONG"
+  },
+  "cooperative_outcome": {
+    "stable": false,
+    "societal_trust_change": -3
+  },
+  "trust_impact": {
+    "breach": true,
+    "relationships_affected": [
+      "marriage",
+      "family",
+      "community_trust"
+    ],
+    "impact_type": [
+      "BREACHES_TRUST",
+      "WEAKENS"
+    ]
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [],
+    "vices": [
+      "DISHONESTY",
+      "BETRAYAL",
+      "INDULGENCE"
+    ]
+  },
+  "duty_assessment": {
+    "duties_upheld": [],
+    "duties_violated": [
+      "FIDELITY",
+      "NON_MALEFICENCE"
+    ]
+  }
+}

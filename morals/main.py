@@ -1,50 +1,69 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# Author: Michael Thomason <mthomason@gmail.com>
+# Copyright (C) 2025 Michael Thomason, All rights reserved.
+# With hope and prayer I release this into the public domain.
+# I claim copyright, only to ensure its release into the public domain.
+
+# -----------------------------------------------------------------------------
+# Included moral cases: Adultery, Pork (modern and historical), lying, charity
+#	mass surveillance, and two trolley problems (switch and fat man).
+# -----------------------------------------------------------------------------
+
 from .moral_engine import MoralEngineRunner
 from .moral_context import *
+from .moral_json import MoralContextManager
 from pprint import pprint
 
 def main():
 
 	engine_runner = MoralEngineRunner()
+	context_manager = MoralContextManager()
 
 	# ------------------------------
 	# Moral Case: Adultery
+	# This example shows how to create the moral context in code, but it's
+	#	also saved and loaded from a JSON file.  This can be done for all
+	#	examples.  But, I'm leaving the existing context in code, to
+	#	demonstrate how it's done, and because the comments are useful.
 	# ------------------------------
 
-	context_adultery = MoralContext(
-		action_description="Engaged in sexual relations with someone else's spouse.",
-		universalized_result=UniversalizedResult(self_collapse=True, contradiction_in_will=True),
-		consequences=Consequences(
-			net_flourishing=-15,
-			net_utility=-20,
-			time_horizon=TimeHorizon.LONG,
-			individual_impact={
-				"betrayed_spouse": -50, 
-				"community_trust": -30,
-				"children": -40,
-				"adulterer": +10 # short-term pleasure but long-term harm
-			},
-			power_expression=-5
-		),
-		cooperative_outcome=CooperativeOutcome(stable=False, societal_trust_change=-3),
-		trust_impact=TrustImpact(
-			breach=True,
-			relationships_affected=["marriage", "family", "community_trust"],
-			impact_type=[RelationshipImpact.BREACHES_TRUST, RelationshipImpact.WEAKENS]
-		),
-		agent=Agent(
-			agent_type=AgentType.STRANGER,
-			virtues=[],
-			vices=[Vice.DISHONESTY, Vice.BETRAYAL, Vice.INDULGENCE]
-		),
-		duty_assessment=DutyAssessment(
-			duties_upheld=[],
-			duties_violated=[DutyType.FIDELITY, DutyType.NON_MALEFICENCE]
+	if not context_manager.context_exists("adultery"):
+		context_adultery = MoralContext(
+			action_description="Engaged in sexual relations with someone else's spouse.",
+			universalized_result=UniversalizedResult(self_collapse=True, contradiction_in_will=True),
+			consequences=Consequences(
+				net_flourishing=-15,
+				net_utility=-20,
+				time_horizon=TimeHorizon.LONG,
+				individual_impact={
+					"betrayed_spouse": -50, 
+					"community_trust": -30,
+					"children": -40,
+					"adulterer": +10 # short-term pleasure but long-term harm
+				},
+				power_expression=-5
+			),
+			cooperative_outcome=CooperativeOutcome(stable=False, societal_trust_change=-3),
+			trust_impact=TrustImpact(
+				breach=True,
+				relationships_affected=["marriage", "family", "community_trust"],
+				impact_type=[RelationshipImpact.BREACHES_TRUST, RelationshipImpact.WEAKENS]
+			),
+			agent=Agent(
+				agent_type=AgentType.STRANGER,
+				virtues=[],
+				vices=[Vice.DISHONESTY, Vice.BETRAYAL, Vice.INDULGENCE]
+			),
+			duty_assessment=DutyAssessment(
+				duties_upheld=[],
+				duties_violated=[DutyType.FIDELITY, DutyType.NON_MALEFICENCE]
+			)
 		)
-	)
-
+		context_manager.save_context(context_adultery, "adultery") # This is how to write to JSON
+	
+	context_adultery = context_manager.load_context("adultery")	# This is the only example read from JSON
 	result_adultery = engine_runner.run_engines("adultery", context_adultery)
 
 	# ------------------------------
@@ -64,11 +83,11 @@ def main():
 			net_utility=+10,
 			time_horizon=TimeHorizon.MEDIUM,
 			individual_impact={
-				"eater": +15,  # nutrition and pleasure
-				"farmer": +5,   # economic benefit
+				"eater": +15,	# nutrition and pleasure
+				"farmer": +5,	# economic benefit
 				"society": 0	# no significant impact
 			},
-			power_expression=+2  # exercising personal choice
+			power_expression=+2	# exercising personal choice
 		),
 		
 		cooperative_outcome=CooperativeOutcome(
@@ -84,12 +103,12 @@ def main():
 		
 		agent=Agent(
 			agent_type=AgentType.STRANGER,
-			virtues=[Virtue.TEMPERANCE],  # eating in moderation
+			virtues=[Virtue.TEMPERANCE],				# eating in moderation
 			vices=[]
 		),
 		
 		duty_assessment=DutyAssessment(
-			duties_upheld=[DutyType.SELF_IMPROVEMENT],  # maintaining health
+			duties_upheld=[DutyType.SELF_IMPROVEMENT],	# maintaining health
 			duties_violated=[]
 		)
 	)
