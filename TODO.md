@@ -15,12 +15,15 @@
 	* I have a hard time using just dictionaries without types, because it just seems a mess to me
 	* I like to have more clear and well defined types, just to avoid error.
 - [x] Create new models:
-	* Nieizschean
-	* Rossian
-	* Ethics of Care
+	- [x] Nieizschean
+	- [x] Rossian
+	- [x] Ethics of Care
+	- [ ] Divine Command Theory
+	- [ ] Existentialist
+	- [ ] Buddhist Ethics
 - [ ] Could make more poetic or philosophical by adding axioms of truth that span across all philosophies.  This would basically be adding my own philosophy.  Currently it's summing up all philosophies, which is useful.
-- [ ] Output context along with results.
+- [x] Output context along with results.
 - [ ] Provide output in markdown.
-- [ ] Allow JSON input.
+- [x] Allow JSON input.
 
 _Do good work, not evil.  Leave a positive impact upon society._
