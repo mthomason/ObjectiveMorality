@@ -23,9 +23,9 @@
   "trust_impact": {
     "breach": true,
     "relationships_affected": [
-      "marriage",
-      "family",
-      "community_trust"
+      "SPOUSE_SPOUSE",
+      "FAMILY_MEMBER",
+      "CITIZEN_STATE"
     ],
     "impact_type": [
       "BREACHES_TRUST",

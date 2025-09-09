@@ -372,7 +372,7 @@ class MoralEngineRunner:
 		print(f"  Cooperative outcome: Stable={context.cooperative_outcome.stable}, "
 			  f"Trust change={context.cooperative_outcome.societal_trust_change}")
 		print(f"  Trust impact: Breach={context.trust_impact.breach}, "
-			  f"Relationships affected={context.trust_impact.relationships_affected}")
+			  f"Relationships affected={[r.name for r in context.trust_impact.relationships_affected]}")
 		print(f"  Agent: Type={context.agent.agent_type.name}, "
 			  f"Virtues={[v.name for v in context.agent.virtues]}, "
 			  f"Vices={[v.name for v in context.agent.vices]}")

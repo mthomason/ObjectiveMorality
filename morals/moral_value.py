@@ -203,8 +203,8 @@ class RawlsianMoralValue(PhilosophicalMoralValue):
 	"""
 	Rawls' moral valuations focused on justice and fairness from behind the veil of ignorance.
 	"""
-	JUST = auto()		   # Promotes fairness, especially for least advantaged
-	UNJUST = auto()		 # Creates or exacerbates unfair inequality
+	JUST = auto()			# Promotes fairness, especially for least advantaged
+	UNJUST = auto()			# Creates or exacerbates unfair inequality
 	NEUTRAL = auto()		# No significant impact on social justice
 
 	def to_core(self) -> MoralValue:

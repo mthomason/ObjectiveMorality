@@ -48,7 +48,7 @@ def main():
 			cooperative_outcome=CooperativeOutcome(stable=False, societal_trust_change=-3),
 			trust_impact=TrustImpact(
 				breach=True,
-				relationships_affected=["marriage", "family", "community_trust"],
+				relationships_affected=[RelationshipType.SPOUSE_SPOUSE, RelationshipType.FAMILY_MEMBER, RelationshipType.CITIZEN_STATE],
 				impact_type=[RelationshipImpact.BREACHES_TRUST, RelationshipImpact.WEAKENS]
 			),
 			agent=Agent(
@@ -195,7 +195,7 @@ def main():
 		
 		trust_impact=TrustImpact(
 			breach=True,
-			relationships_affected=["societal_trust", "friendship", "official_citizen_trust"],
+			relationships_affected=[RelationshipType.CITIZEN_STATE, RelationshipType.FRIEND_FRIEND, RelationshipType.CITIZEN_STATE],
 			impact_type=[
 				RelationshipImpact.BREACHES_TRUST,		# to society/official
 				RelationshipImpact.STRENGTHENS,			# to friend
@@ -254,7 +254,7 @@ def main():
 		
 		trust_impact=TrustImpact(
 			breach=False,
-			relationships_affected=["global_community", "donor_recipient"],
+			relationships_affected=[RelationshipType.HUMAN_HUMAN, RelationshipType.CAREGIVER_RECEIVER],
 			impact_type=[
 				RelationshipImpact.BUILDS_TRUST,
 				RelationshipImpact.NURTURES,
@@ -312,7 +312,7 @@ def main():
 		
 		trust_impact=TrustImpact(
 			breach=True,
-			relationships_affected=["citizen_state", "social_fabric", "international_trust"],
+			relationships_affected=[RelationshipType.CITIZEN_STATE, RelationshipType.COMMUNITY_MEMBER, RelationshipType.HUMAN_HUMAN],
 			impact_type=[
 				RelationshipImpact.BREACHES_TRUST,
 				RelationshipImpact.EXPLOITS,
@@ -426,7 +426,7 @@ def main():
 		
 		trust_impact=TrustImpact(
 			breach=True,
-			relationships_affected=["social_trust"],
+			relationships_affected=[RelationshipType.COMMUNITY_MEMBER],
 			impact_type=[RelationshipImpact.BREACHES_TRUST, RelationshipImpact.WEAKENS]
 		),
 		

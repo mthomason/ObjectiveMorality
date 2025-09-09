@@ -88,6 +88,49 @@ class DutyType(Enum):
 	def from_str(cls, value: str) -> 'DutyType':
 		return cls[value]
 
+class RelationshipType(Enum):
+	"""
+	Core types of moral relationships from care ethics and virtue ethics perspectives.
+	"""
+	# Primary relationships (strongest obligations)
+	PARENT_CHILD = auto()
+	CHILD_PARENT = auto()
+	SPOUSE_SPOUSE = auto()
+	SIBLING_SIBLING = auto()
+	
+	# Extended family
+	FAMILY_MEMBER = auto()  # Generic family relationship
+	
+	# Chosen relationships
+	FRIEND_FRIEND = auto()
+	ROMANTIC_PARTNERS = auto()
+	
+	# Care relationships
+	CAREGIVER_RECEIVER = auto()  # Nurse-patient, etc.
+	TEACHER_STUDENT = auto()
+	
+	# Community relationships
+	NEIGHBOR_NEIGHBOR = auto()
+	COMMUNITY_MEMBER = auto()
+	WORK_COLLEAGUE = auto()
+	
+	# Societal relationships
+	CITIZEN_STATE = auto()
+	PROFESSIONAL_CLIENT = auto()  # Doctor-patient, lawyer-client
+	
+	# Universal relationships
+	STRANGER_STRANGER = auto()
+	HUMAN_HUMAN = auto()  # Most abstract care relationship
+	
+	# Institutional relationships
+	EMPLOYER_EMPLOYEE = auto()
+	BUSINESS_CUSTOMER = auto()
+
+	@classmethod
+	def from_str(cls, value: str) -> 'RelationshipType':
+		return cls[value]
+
+
 class RelationshipImpact(Enum):
 	"""
 	Types of impacts for an Ethics of Care framework.
@@ -224,7 +267,7 @@ class TrustImpact:
 	Records whether trust was breached in the interaction.
 	"""
 	breach: bool = False
-	relationships_affected: list[str] = field(default_factory=list)
+	relationships_affected: list[RelationshipType] = field(default_factory=list)
 	impact_type: list[RelationshipImpact] = field(default_factory=list)
 
 	def __post_init__(self):
@@ -234,7 +277,7 @@ class TrustImpact:
 	def to_dict(self) -> dict[str, Any]:
 		return {
 			'breach': self.breach,
-			'relationships_affected': self.relationships_affected,
+			'relationships_affected': [relationship.name for relationship in self.relationships_affected],
 			'impact_type': [impact.name for impact in self.impact_type]
 		}
 
@@ -242,7 +285,7 @@ class TrustImpact:
 	def from_dict(cls, data: dict[str, Any]) -> 'TrustImpact':
 		return cls(
 			breach=data['breach'],
-			relationships_affected=data['relationships_affected'],
+			relationships_affected=[RelationshipType.from_str(relationship) for relationship in data['relationships_affected']],
 			impact_type=[RelationshipImpact.from_str(impact) for impact in data['impact_type']]
 		)
 
@@ -373,6 +416,7 @@ __all__ = [
 	'Vice',
 	'DutyType',
 	'AgentType',
+	'RelationshipType',
 	'RelationshipImpact',
 	'TimeHorizon',
 	'JSONEncoder'

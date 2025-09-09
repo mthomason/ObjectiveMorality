@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
 from pathlib import Path
-from typing import Dict, Any
-from .moral_context import MoralContext, JSONEncoder
+from .moral_context import MoralContext
 
 class MoralContextManager:
 	"""Manages saving and loading MoralContext instances to/from JSON files"""
