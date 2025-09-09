@@ -9,10 +9,10 @@
     "net_utility": -20,
     "power_expression": -5,
     "individual_impact": {
-      "betrayed_spouse": -50,
-      "community_trust": -30,
-      "children": -40,
-      "adulterer": 10
+      "BETRAYED_SPOUSE": -50,
+      "COMMUNITY": -30,
+      "CHILD": -40,
+      "AGENT": 10
     },
     "time_horizon": "LONG"
   },

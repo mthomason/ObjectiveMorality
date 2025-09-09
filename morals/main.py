@@ -38,10 +38,10 @@ def main():
 				net_utility=-20,
 				time_horizon=TimeHorizon.LONG,
 				individual_impact={
-					"betrayed_spouse": -50, 
-					"community_trust": -30,
-					"children": -40,
-					"adulterer": +10 # short-term pleasure but long-term harm
+					ImpactSubject.BETRAYED_SPOUSE: -50, 
+					ImpactSubject.COMMUNITY: -30,
+					ImpactSubject.CHILD: -40,
+					ImpactSubject.AGENT: +10 # short-term pleasure but long-term harm
 				},
 				power_expression=-5
 			),
@@ -83,9 +83,9 @@ def main():
 			net_utility=+10,
 			time_horizon=TimeHorizon.MEDIUM,
 			individual_impact={
-				"eater": +15,	# nutrition and pleasure
-				"farmer": +5,	# economic benefit
-				"society": 0	# no significant impact
+				ImpactSubject.EATER: +15,	# nutrition and pleasure
+				ImpactSubject.FARMER: +5,	# economic benefit
+				ImpactSubject.SOCIETY: 0	# no significant impact
 			},
 			power_expression=+2	# exercising personal choice
 		),
@@ -132,9 +132,9 @@ def main():
 			net_utility=-15,
 			time_horizon=TimeHorizon.MEDIUM,
 			individual_impact={
-				"eater": -20,  # illness and suffering
-				"family": -10,  # burden of care
-				"community": -5 # potential spread of illness
+				ImpactSubject.EATER: -20,  # illness and suffering
+				ImpactSubject.FAMILY_MEMBER: -10,  # burden of care
+				ImpactSubject.COMMUNITY: -5 # potential spread of illness
 			},
 			power_expression=-3  # poor judgment leading to harm
 		),
@@ -180,10 +180,10 @@ def main():
 			net_flourishing=10,
 			net_utility=15,
 			individual_impact={
-				"friend": 100,		# protected from potential harm
-				"society": -15,		# minor erosion of trust (not -85, too severe for a single lie)
-				"official": -5,		# wasted time/resources
-				"oneself": +5		# maintained friendship integrity, but with moral discomfort
+				ImpactSubject.FRIEND: 100,		# protected from potential harm
+				ImpactSubject.SOCIETY: -15,		# minor erosion of trust (not -85, too severe for a single lie)
+				ImpactSubject.OFFICIAL: -5,		# wasted time/resources
+				ImpactSubject.AGENT: +5			# maintained friendship integrity, but with moral discomfort
 			},
 			power_expression=-2	 # slightly negative - deception isn't typically power-affirming
 		),
@@ -240,9 +240,9 @@ def main():
 			net_utility=+30,
 			time_horizon=TimeHorizon.LONG,
 			individual_impact={
-				"recipients": +80,		# life-changing benefits
-				"donor": -10,			# personal sacrifice
-				"society": +5			# positive externalities
+				ImpactSubject.RECIPIENT: +80,		# life-changing benefits
+				ImpactSubject.DONOR: -10,			# personal sacrifice
+				ImpactSubject.SOCIETY: +5			# positive externalities
 			},
 			power_expression=+3			# exercising virtue and generosity
 		),
@@ -297,10 +297,10 @@ def main():
 			net_utility=-5,					# Mixed: some security benefits vs massive privacy costs
 			time_horizon=TimeHorizon.LONG,
 			individual_impact={
-				"citizens": -30,			# Loss of privacy, autonomy, trust
-				"government": +10,			# Increased perceived security, power
-				"dissidents": -50,			# Targeted repression, fear
-				"criminals": -5				# Some prevention, but many evade
+				ImpactSubject.CITIZENS: -30,	# Loss of privacy, autonomy, trust
+				ImpactSubject.GOVERNMENT: +10,	# Increased perceived security, power
+				ImpactSubject.DISSIDENT: -50,	# Targeted repression, fear
+				ImpactSubject.CRIMINAL: -5		# Some prevention, but many evade
 			},
 			power_expression=+8				# Massive state power increase
 		),
@@ -358,9 +358,9 @@ def main():
 			net_utility=+4,
 			time_horizon=TimeHorizon.LONG,
 			individual_impact={
-				"saved_people": +5,
-				"person_on_side_track": -1,
-				"decision_maker": -2		# Emotional burden
+				ImpactSubject.SAVED_PEOPLE: +5,
+				ImpactSubject.STRANGER: -1,
+				ImpactSubject.AGENT: -2		# Emotional burden
 			},
 			power_expression=+3				# Taking control of situation
 		),
@@ -412,9 +412,9 @@ def main():
 			net_utility=+4,
 			time_horizon=TimeHorizon.LONG,
 			individual_impact={
-				"saved_people": +5,
-				"pushed_person": -1,
-				"decision_maker": -5		# Greater emotional burden (more direct involvement)
+				ImpactSubject.SAVED_PEOPLE: +5,
+				ImpactSubject.STRANGER: -1,
+				ImpactSubject.AGENT: -5		# Greater emotional burden (more direct involvement)
 			},
 			power_expression=-2				# Using someone as mere means
 		),

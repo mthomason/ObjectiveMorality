@@ -146,6 +146,53 @@ class RelationshipImpact(Enum):
 	def from_str(cls, value: str) -> 'RelationshipImpact':
 		return cls[value]
 
+class ImpactSubject(Enum):
+	"""
+	Specific entities or groups that can be impacted by an action.
+	"""
+	# Individuals
+	AGENT = auto()				# The person performing the action
+	SELF = auto()				# The agent themselves  
+	FRIEND = auto()
+	FAMILY_MEMBER = auto()
+	SPOUSE = auto()
+	CHILD = auto()
+	PARENT = auto()
+	STRANGER = auto()
+	OFFICIAL = auto()
+	DISSIDENT = auto()
+	CRIMINAL = auto()
+	
+	# Roles
+	EATER = auto()
+	FARMER = auto()
+	DONOR = auto()
+	RECIPIENT = auto()
+	CAREGIVER = auto()
+	TEACHER = auto()
+	STUDENT = auto()
+	EMPLOYER = auto()
+	EMPLOYEE = auto()
+	
+	# Groups
+	SOCIETY = auto()
+	COMMUNITY = auto()
+	GOVERNMENT = auto()
+	CITIZENS = auto()
+	HUMANITY = auto()
+	ENVIRONMENT = auto()
+	
+	# Specific cases
+	BETRAYED_SPOUSE = auto()
+	SAVED_PEOPLE = auto()
+	PERSON_ON_SIDE_TRACK = auto()
+	DECISION_MAKER = auto()
+	PUSHED_PERSON = auto()
+
+	@classmethod
+	def from_str(cls, value: str) -> 'ImpactSubject':
+		return cls[value]
+
 class TimeHorizon(Enum):
 	"""
 	Time horizon type. This is used for calculating `effective_utility()` from `net_utility`.
@@ -193,8 +240,8 @@ class Consequences:
 	net_flourishing: int = 0
 	net_utility: int = 0
 	power_expression: int = 0	# Nietzschean metric
-	individual_impact: dict[str, int] = field(default_factory=dict)
 	time_horizon: TimeHorizon = TimeHorizon.MEDIUM
+	individual_impact: dict[ImpactSubject, int] = field(default_factory=dict)
 
 	def __post_init__(self):
 		if not isinstance(self.net_flourishing, int):
@@ -216,21 +263,25 @@ class Consequences:
 			return int(self.net_utility * 0.6)
 
 	def to_dict(self) -> dict[str, Any]:
+		individual_impact_dict = {key.name: value for key, value in self.individual_impact.items()}
 		return {
 			'net_flourishing': self.net_flourishing,
 			'net_utility': self.net_utility,
 			'power_expression': self.power_expression,
-			'individual_impact': self.individual_impact,
+			'individual_impact': individual_impact_dict,
 			'time_horizon': self.time_horizon.name
 		}
 	
 	@classmethod
 	def from_dict(cls, data: dict[str, Any]) -> 'Consequences':
+		individual_impact_dict = {}
+		if 'individual_impact' in data:
+			individual_impact_dict = {ImpactSubject[key]: value for key, value in data['individual_impact'].items()}
 		return cls(
 			net_flourishing=data['net_flourishing'],
 			net_utility=data['net_utility'],
 			power_expression=data['power_expression'],
-			individual_impact=data['individual_impact'],
+			individual_impact=individual_impact_dict,
 			time_horizon=TimeHorizon.from_str(data['time_horizon'])
 		)
 
@@ -418,6 +469,7 @@ __all__ = [
 	'AgentType',
 	'RelationshipType',
 	'RelationshipImpact',
+	'ImpactSubject',
 	'TimeHorizon',
 	'JSONEncoder'
 ]
