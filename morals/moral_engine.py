@@ -6,7 +6,7 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
-from .moral_context import MoralContext, DutyType, AgentType, RelationshipImpact, TimeHorizon
+from .moral_context import *
 from .moral_value import *
 
 # ------------------------------
@@ -246,7 +246,10 @@ class NietzscheanEngine(MoralEngine):
 # Ethics of Care Engine
 # ------------------------------
 
-class EthicsOfCareEngine(MoralEngine):
+class EthicsOfCareEngineBasic(MoralEngine):
+	"""
+	Old basic implementation.  This shouldn't be used.
+	"""
 	def evaluate(self, action, context) -> PhilosophicalMoralValue:
 		# Focuses on relational impact, not abstract rules or total utility.
 		if (RelationshipImpact.NURTURES in context.trust_impact.impact_type or
@@ -256,6 +259,150 @@ class EthicsOfCareEngine(MoralEngine):
 			return CareMoralValue.UNCARING
 		else:
 			return CareMoralValue.NEUTRAL
+
+class EthicsOfCareEngine(MoralEngine):
+	def evaluate(self, action, context) -> PhilosophicalMoralValue:
+		"""
+		Evaluates based on:
+		1. Does it attend to concrete needs of vulnerable parties?
+		2. Does it maintain and nurture specific relationships?
+		3. Does it respect the particular context and power dynamics?
+		4. Does it exercise appropriate partiality?
+		"""
+		# 1. Check for exploitation of vulnerable relationships
+		if self._involves_exploitation(context):
+			return CareMoralValue.UNCARING
+			
+		# 2. Check if it responds to concrete needs
+		if self._responds_to_concrete_needs(context):
+			return CareMoralValue.CARING
+			
+		# 3. Check relationship maintenance
+		relationship_score = self._evaluate_relationship_impact(context)
+		if relationship_score > 1:
+			return CareMoralValue.CARING
+		elif relationship_score < -1:
+			return CareMoralValue.UNCARING
+			
+		return CareMoralValue.NEUTRAL
+	
+	def _involves_exploitation(self, context: MoralContext) -> bool:
+		"""Check for exploitation of care relationships or power imbalances"""
+		if (RelationshipImpact.EXPLOITS in context.trust_impact.impact_type):
+			return True
+			
+		# Check for power imbalances in caregiver-receiver relationships
+		caregiver_relationships = [
+			RelationshipType.PARENT_CHILD,
+			RelationshipType.CHILD_PARENT,
+			RelationshipType.CAREGIVER_RECEIVER,
+			RelationshipType.TEACHER_STUDENT,
+			RelationshipType.PROFESSIONAL_CLIENT
+		]
+		
+		caregiver_impact = any(rel in context.trust_impact.relationships_affected 
+							  for rel in caregiver_relationships)
+		
+		if (caregiver_impact and 
+			(RelationshipImpact.WEAKENS in context.trust_impact.impact_type or
+			 RelationshipImpact.BREACHES_TRUST in context.trust_impact.impact_type)):
+			return True
+			
+		return False
+	
+	def _responds_to_concrete_needs(self, context: MoralContext) -> bool:
+		"""Check if action responds to immediate, concrete needs rather than abstract principles"""
+		# Actions that address specific vulnerabilities or immediate needs
+		vulnerable_subjects = [
+			ImpactSubject.CHILD, ImpactSubject.PARENT, ImpactSubject.RECIPIENT,
+			ImpactSubject.STUDENT, ImpactSubject.EMPLOYEE, ImpactSubject.DISSIDENT,
+			ImpactSubject.BETRAYED_SPOUSE, ImpactSubject.PUSHED_PERSON
+		]
+		
+		# Check if action impacts vulnerable parties positively
+		positive_impact_on_vulnerable = any(
+			subject in context.consequences.individual_impact and 
+			context.consequences.individual_impact[subject] > 0
+			for subject in vulnerable_subjects
+		)
+		
+		# Check action description for care-related keywords
+		care_keywords = ["care", "help", "protect", "nurture", "support", "feed", "shelter", "heal"]
+		action_description = context.action_description.lower()
+		
+		has_care_language = any(keyword in action_description for keyword in care_keywords)
+		
+		# Only caring if it actually helps (net positive impact on vulnerable or overall)
+		if ((positive_impact_on_vulnerable or context.consequences.net_flourishing > 0) and
+			(has_care_language or positive_impact_on_vulnerable)):
+			return True
+				
+		return False
+	
+	def _evaluate_relationship_impact(self, context: MoralContext) -> int:
+		"""Score relationship impacts with nuance for care ethics"""
+		score:float = 0
+		
+		# Different relationships have different moral weight in care ethics
+		relationship_weights = {
+			RelationshipType.PARENT_CHILD: 3,
+			RelationshipType.CHILD_PARENT: 2,
+			RelationshipType.SPOUSE_SPOUSE: 2.5,
+			RelationshipType.SIBLING_SIBLING: 2,
+			RelationshipType.FAMILY_MEMBER: 2,
+			RelationshipType.FRIEND_FRIEND: 1.5,
+			RelationshipType.CAREGIVER_RECEIVER: 2.5,
+			RelationshipType.TEACHER_STUDENT: 2,
+			RelationshipType.NEIGHBOR_NEIGHBOR: 1,
+			RelationshipType.COMMUNITY_MEMBER: 1,
+			RelationshipType.HUMAN_HUMAN: 0.5,
+			RelationshipType.STRANGER_STRANGER: 0.3,
+			RelationshipType.CITIZEN_STATE: 0.2
+		}
+		
+		for relationship in context.trust_impact.relationships_affected:
+			weight = relationship_weights.get(relationship, 0.5)
+			
+			if RelationshipImpact.NURTURES in context.trust_impact.impact_type:
+				score += weight
+			if RelationshipImpact.STRENGTHENS in context.trust_impact.impact_type:
+				score += weight * 0.8
+			if RelationshipImpact.BUILDS_TRUST in context.trust_impact.impact_type:
+				score += weight * 0.6
+			if RelationshipImpact.BREACHES_TRUST in context.trust_impact.impact_type:
+				score -= weight * 1.2
+			if RelationshipImpact.WEAKENS in context.trust_impact.impact_type:
+				score -= weight
+			if RelationshipImpact.EXPLOITS in context.trust_impact.impact_type:
+				score -= weight * 1.5
+				
+		return int(score)
+	
+	def _assess_partiality(self, context: MoralContext) -> bool:
+		"""Check if action shows appropriate partiality (care ethics rejects impartiality)"""
+		# Care ethics expects stronger obligations to closer relationships
+		close_relationships = [
+			RelationshipType.PARENT_CHILD, RelationshipType.CHILD_PARENT,
+			RelationshipType.SPOUSE_SPOUSE, RelationshipType.SIBLING_SIBLING,
+			RelationshipType.FAMILY_MEMBER, RelationshipType.FRIEND_FRIEND,
+			RelationshipType.CAREGIVER_RECEIVER
+		]
+		
+		distant_relationships = [
+			RelationshipType.STRANGER_STRANGER, RelationshipType.CITIZEN_STATE,
+			RelationshipType.HUMAN_HUMAN, RelationshipType.COMMUNITY_MEMBER
+		]
+		
+		close_impact = any(rel in context.trust_impact.relationships_affected 
+						  for rel in close_relationships)
+		distant_impact = any(rel in context.trust_impact.relationships_affected 
+						   for rel in distant_relationships)
+		
+		# It's appropriate to prioritize close relationships in care ethics
+		if close_impact and not distant_impact:
+			return True  # Appropriate partiality
+			
+		return False
 
 # ------------------------------
 # Rawlsian Engine
