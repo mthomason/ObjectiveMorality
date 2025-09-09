@@ -6,8 +6,9 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
-from enum import Enum, EnumMeta, auto
-from abc import ABC, ABCMeta, abstractmethod
+from enum import Enum, auto
+from abc import ABC, abstractmethod
+from .abc_enum import AbcEnumMeta
 
 class MoralValue(Enum):
 	"""
@@ -33,10 +34,6 @@ class MoralValue(Enum):
 	def __str__(self):
 		"""Pretty print value."""
 		return self.name.title()
-	
-class AbcEnumMeta(ABCMeta, EnumMeta):
-	"""Metaclass for combining ABC and Enum functionality"""
-	pass
 
 class PhilosophicalMoralValue(ABC, Enum, metaclass=AbcEnumMeta):
 	"""

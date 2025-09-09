@@ -6,24 +6,18 @@
 # With hope and prayer I release this into the public domain.
 # I claim copyright, only to ensure its release into the public domain.
 
+from .abc_enum import MoralEnumBase	# Has `from_str()` for JSON export
+
 import json
 from dataclasses import dataclass, field
 from enum import Enum, auto
-from typing import TypeVar, Any
+from typing import Any
 
-T = TypeVar('T')
-
-class JSONEncoder(json.JSONEncoder):
-	def default(self, obj):
-		if isinstance(obj, Enum):
-			return obj.name
-		if hasattr(obj, 'to_dict'):
-			return obj.to_dict()
-		return super().default(obj)
-
+# -----------------------------------------------------------------------------
 # Enums Defining Types and Categories
+# -----------------------------------------------------------------------------
 
-class AgentType(Enum):
+class AgentType(MoralEnumBase):
 	"""
 	Rough categorization of the moral agent's role or nature.
 	"""
@@ -36,11 +30,7 @@ class AgentType(Enum):
 	VIRTUOUS = auto()
 	VICIOUS = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'AgentType':
-		return cls[value]
-
-class Virtue(Enum):
+class Virtue(MoralEnumBase):
 	"""
 	A list of positive character traits (Aristotelian virtues).
 	"""
@@ -52,11 +42,7 @@ class Virtue(Enum):
 	TEMPERANCE = auto()
 	WISDOM = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'Virtue':
-		return cls[value]
-
-class Vice(Enum):
+class Vice(MoralEnumBase):
 	"""
 	A list of negative character traits.
 	"""
@@ -68,11 +54,7 @@ class Vice(Enum):
 	INDULGENCE = auto()
 	FOOLISHNESS = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'Vice':
-		return cls[value]
-
-class DutyType(Enum):
+class DutyType(MoralEnumBase):
 	"""
 	W.D. Ross's Prima Facie duties.
 	"""
@@ -84,11 +66,7 @@ class DutyType(Enum):
 	SELF_IMPROVEMENT = auto()	# Duty to improve oneself
 	NON_MALEFICENCE = auto()	# Duty to avoid harming others
 
-	@classmethod
-	def from_str(cls, value: str) -> 'DutyType':
-		return cls[value]
-
-class RelationshipType(Enum):
+class RelationshipType(MoralEnumBase):
 	"""
 	Core types of moral relationships from care ethics and virtue ethics perspectives.
 	"""
@@ -126,12 +104,7 @@ class RelationshipType(Enum):
 	EMPLOYER_EMPLOYEE = auto()
 	BUSINESS_CUSTOMER = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'RelationshipType':
-		return cls[value]
-
-
-class RelationshipImpact(Enum):
+class RelationshipImpact(MoralEnumBase):
 	"""
 	Types of impacts for an Ethics of Care framework.
 	"""
@@ -142,11 +115,7 @@ class RelationshipImpact(Enum):
 	BREACHES_TRUST = auto()
 	BUILDS_TRUST = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'RelationshipImpact':
-		return cls[value]
-
-class ImpactSubject(Enum):
+class ImpactSubject(MoralEnumBase):
 	"""
 	Specific entities or groups that can be impacted by an action.
 	"""
@@ -189,11 +158,7 @@ class ImpactSubject(Enum):
 	DECISION_MAKER = auto()
 	PUSHED_PERSON = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'ImpactSubject':
-		return cls[value]
-
-class TimeHorizon(Enum):
+class TimeHorizon(MoralEnumBase):
 	"""
 	Time horizon type. This is used for calculating `effective_utility()` from `net_utility`.
 	"""
@@ -201,9 +166,9 @@ class TimeHorizon(Enum):
 	MEDIUM = auto()
 	LONG = auto()
 
-	@classmethod
-	def from_str(cls, value: str) -> 'TimeHorizon':
-		return cls[value]
+# -----------------------------------------------------------------------------
+# Dataclasses that are part of the `MoralContext`
+# -----------------------------------------------------------------------------
 
 @dataclass(frozen=True)
 class UniversalizedResult:
@@ -389,6 +354,10 @@ class DutyAssessment:
 			duties_violated=[DutyType.from_str(duty) for duty in data['duties_violated']]
 		)
 
+# -----------------------------------------------------------------------------
+# `MoralContext`... This is the main class used to run by the moral engines.
+# -----------------------------------------------------------------------------
+
 @dataclass(frozen=True)
 class MoralContext:
 	"""
@@ -454,6 +423,15 @@ class MoralContext:
 		with open(filepath, 'r', encoding='utf-8') as f:
 			data = json.load(f)
 		return cls.from_dict(data)
+	
+class JSONEncoder(json.JSONEncoder):
+	def default(self, obj):
+		if isinstance(obj, Enum):
+			return obj.name
+		if hasattr(obj, 'to_dict'):
+			return obj.to_dict()
+		return super().default(obj)
+
 
 __all__ = [
 	'MoralContext',
