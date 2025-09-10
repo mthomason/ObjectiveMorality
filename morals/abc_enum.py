@@ -5,7 +5,7 @@ from enum import Enum, EnumMeta
 from abc import ABCMeta
 from typing import TypeVar, Type
 
-_MEB = TypeVar('_MEB', bound='MoralEnumBase')
+_MEB = TypeVar('_MEB', bound='MoralEnumBase')	# Used for type hints.
 
 class AbcEnumMeta(ABCMeta, EnumMeta):
 	"""Metaclass for combining ABC and Enum functionality"""
@@ -13,8 +13,7 @@ class AbcEnumMeta(ABCMeta, EnumMeta):
 
 class MoralEnumBase(Enum, metaclass=AbcEnumMeta):
 	"""
-	A mixin class for Enums that adds a from_str class method.
-	This class inherits from Enum and uses the custom metaclass.
+	Base class for Enum types with `from_str()` function.
 	"""
 	@classmethod
 	def from_str(cls: Type[_MEB], value: str) -> _MEB:
@@ -36,5 +35,4 @@ class MoralEnumBase(Enum, metaclass=AbcEnumMeta):
 		try:
 			return cls[value]
 		except KeyError:
-			# It's good practice to provide a clear error message.
 			raise ValueError(f"'{value}' is not a valid member of {cls.__name__}")

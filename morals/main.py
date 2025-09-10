@@ -449,6 +449,78 @@ def main():
 
 	result_trolley_fat_man = engine_runner.run_engines("trolley_fat_man", context_trolley_fat_man)
 
+	# ------------------------------
+	# Moral Case: Suicide
+	# ------------------------------
+
+	context_suicide = MoralContext(
+		action_description="A person intentionally ends their own life to escape unbearable suffering.",
+		
+		universalized_result=UniversalizedResult(
+			self_collapse=True,          # Universal suicide would lead to human extinction
+			contradiction_in_will=True   # Rational beings wouldn't will their own non-existence
+		),
+		
+		consequences=Consequences(
+			net_flourishing=-20,
+			net_utility=-15,
+			time_horizon=TimeHorizon.LONG,
+			individual_impact={
+				ImpactSubject.AGENT: -100,           # Complete loss of flourishing
+				ImpactSubject.FAMILY_MEMBER: -40,    # Profound grief and trauma
+				ImpactSubject.FRIEND: -30,           # Loss and emotional pain
+				ImpactSubject.COMMUNITY: -10,        # Social fabric weakened
+				ImpactSubject.SOCIETY: -5            # Loss of potential contribution
+			},
+			power_expression=-8          # Ultimate loss of agency and self-mastery
+		),
+		
+		cooperative_outcome=CooperativeOutcome(
+			stable=False,
+			societal_trust_change=-2     # Undermines social commitment to life preservation
+		),
+		
+		trust_impact=TrustImpact(
+			breach=True,
+			relationships_affected=[
+				RelationshipType.FAMILY_MEMBER,
+				RelationshipType.FRIEND_FRIEND,
+				RelationshipType.COMMUNITY_MEMBER,
+				RelationshipType.HUMAN_HUMAN
+			],
+			impact_type=[
+				RelationshipImpact.BREACHES_TRUST,  # Breach of implicit social contract
+				RelationshipImpact.WEAKENS,         # Weakens family and community bonds
+				RelationshipImpact.EXPLOITS         # Exploits relationships by transferring pain
+			]
+		),
+		
+		agent=Agent(
+			agent_type=AgentType.STRANGER,
+			virtues=[Virtue.COURAGE],    # Some might see courage in facing death
+			vices=[
+				Vice.DESPAIR,            # Overwhelming hopelessness
+				Vice.SELFISHNESS,        # Putting own suffering above others' needs
+				Vice.COWARDICE           # Fleeing from life's challenges (from some perspectives)
+			]
+		),
+		
+		duty_assessment=DutyAssessment(
+			duties_upheld=[
+				# Some might argue it upholds self-determination
+			],
+			duties_violated=[
+				DutyType.NON_MALEFICENCE,    # Harm to self
+				DutyType.BENEFICENCE,        # Failure to continue potential good works
+				DutyType.FIDELITY,           # Breaking implicit promises to loved ones
+				DutyType.GRATITUDE,          # Failing to appreciate gift of life
+				DutyType.SELF_IMPROVEMENT    # Ending rather than improving self
+			]
+		)
+	)
+
+	result_suicide = engine_runner.run_engines("suicide", context_suicide)
+
 	engine_runner.display_results("adultery", context_adultery, result_adultery)
 	engine_runner.display_results("pork_modern", context_pork_modern, result_pork_modern)
 	engine_runner.display_results("pork_premodern", context_pork_premodern, result_pork_premodern)
@@ -457,10 +529,8 @@ def main():
 	engine_runner.display_results("mass_surveillance", context_mass_surveillance, result_mass_surveillance)
 	engine_runner.display_results("trolley_switch", context_trolley_switch, result_trolley_switch)
 	engine_runner.display_results("trolley_fat_man", context_trolley_fat_man, result_trolley_fat_man)
-
-	print("")
+	engine_runner.display_results("suicide", context_suicide, result_suicide)
 	engine_runner.display_consistency_report()
-	print("")
 
 if __name__ == "__main__":
 	main()

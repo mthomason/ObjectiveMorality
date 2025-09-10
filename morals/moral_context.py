@@ -53,6 +53,8 @@ class Vice(MoralEnumBase):
 	UNFAIRNESS = auto()
 	INDULGENCE = auto()
 	FOOLISHNESS = auto()
+	DESPAIR = auto()
+	SELFISHNESS = auto()
 
 class DutyType(MoralEnumBase):
 	"""

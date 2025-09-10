@@ -497,6 +497,7 @@ class MoralEngineRunner:
 		if self.consistency_log:
 			print(f"\n{'!'*80}")
 			print("CROSS-ENGINE CONSISTENCY REPORT:")
+			print("Please note, these are not errors.")
 			print(f"{'!'*80}")
 			for issue in self.consistency_log:
 				print(f"• {issue}")
