@@ -60,6 +60,7 @@ class DutyType(MoralEnumBase):
 	"""
 	W.D. Ross's Prima Facie duties.
 	"""
+	# Do not add to these
 	FIDELITY = auto()			# Duty to keep promises
 	REPARATION = auto()			# Duty to correct past wrongs
 	GRATITUDE = auto()			# Duty to repay favors
