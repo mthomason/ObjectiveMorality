@@ -1,0 +1,51 @@
+{
+  "action_description": "Donated a significant portion of income to effective charities helping the global poor.",
+  "universalized_result": {
+    "self_collapse": false,
+    "contradiction_in_will": false
+  },
+  "consequences": {
+    "net_flourishing": 25,
+    "net_utility": 30,
+    "power_expression": 3,
+    "individual_impact": {
+      "RECIPIENT": 80,
+      "DONOR": -10,
+      "SOCIETY": 5
+    },
+    "time_horizon": "LONG"
+  },
+  "cooperative_outcome": {
+    "stable": true,
+    "societal_trust_change": 2
+  },
+  "trust_impact": {
+    "breach": false,
+    "relationships_affected": [
+      "HUMAN_HUMAN",
+      "CAREGIVER_RECEIVER"
+    ],
+    "impact_type": [
+      "BUILDS_TRUST",
+      "NURTURES",
+      "STRENGTHENS"
+    ]
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [
+      "COMPASSION",
+      "JUSTICE",
+      "TEMPERANCE"
+    ],
+    "vices": []
+  },
+  "duty_assessment": {
+    "duties_upheld": [
+      "BENEFICENCE",
+      "JUSTICE",
+      "GRATITUDE"
+    ],
+    "duties_violated": []
+  }
+}

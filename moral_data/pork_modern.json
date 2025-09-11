@@ -1,0 +1,40 @@
+{
+  "action_description": "Ate properly cooked pork from a regulated source.",
+  "universalized_result": {
+    "self_collapse": false,
+    "contradiction_in_will": false
+  },
+  "consequences": {
+    "net_flourishing": 8,
+    "net_utility": 10,
+    "power_expression": 2,
+    "individual_impact": {
+      "EATER": 15,
+      "FARMER": 5,
+      "SOCIETY": 0
+    },
+    "time_horizon": "MEDIUM"
+  },
+  "cooperative_outcome": {
+    "stable": true,
+    "societal_trust_change": 0
+  },
+  "trust_impact": {
+    "breach": false,
+    "relationships_affected": [],
+    "impact_type": []
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [
+      "TEMPERANCE"
+    ],
+    "vices": []
+  },
+  "duty_assessment": {
+    "duties_upheld": [
+      "SELF_IMPROVEMENT"
+    ],
+    "duties_violated": []
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "action_description": "A person intentionally ends their own life to escape unbearable suffering.",
+  "universalized_result": {
+    "self_collapse": true,
+    "contradiction_in_will": true
+  },
+  "consequences": {
+    "net_flourishing": -20,
+    "net_utility": -15,
+    "power_expression": -8,
+    "individual_impact": {
+      "AGENT": -100,
+      "FAMILY_MEMBER": -40,
+      "FRIEND": -30,
+      "COMMUNITY": -10,
+      "SOCIETY": -5
+    },
+    "time_horizon": "LONG"
+  },
+  "cooperative_outcome": {
+    "stable": false,
+    "societal_trust_change": -2
+  },
+  "trust_impact": {
+    "breach": true,
+    "relationships_affected": [
+      "FAMILY_MEMBER",
+      "FRIEND_FRIEND",
+      "COMMUNITY_MEMBER",
+      "HUMAN_HUMAN"
+    ],
+    "impact_type": [
+      "BREACHES_TRUST",
+      "WEAKENS",
+      "EXPLOITS"
+    ]
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [
+      "COURAGE"
+    ],
+    "vices": [
+      "DESPAIR",
+      "SELFISHNESS",
+      "COWARDICE"
+    ]
+  },
+  "duty_assessment": {
+    "duties_upheld": [],
+    "duties_violated": [
+      "NON_MALEFICENCE",
+      "BENEFICENCE",
+      "FIDELITY",
+      "GRATITUDE",
+      "SELF_IMPROVEMENT"
+    ]
+  }
+}

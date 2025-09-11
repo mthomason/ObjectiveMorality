@@ -1,0 +1,58 @@
+{
+  "action_description": "Implemented mass surveillance program collecting data on all citizens without individualized warrants, justified by national security claims.",
+  "universalized_result": {
+    "self_collapse": true,
+    "contradiction_in_will": true
+  },
+  "consequences": {
+    "net_flourishing": -15,
+    "net_utility": -5,
+    "power_expression": 8,
+    "individual_impact": {
+      "CITIZENS": -30,
+      "GOVERNMENT": 10,
+      "DISSIDENT": -50,
+      "CRIMINAL": -5
+    },
+    "time_horizon": "LONG"
+  },
+  "cooperative_outcome": {
+    "stable": false,
+    "societal_trust_change": -20
+  },
+  "trust_impact": {
+    "breach": true,
+    "relationships_affected": [
+      "CITIZEN_STATE",
+      "COMMUNITY_MEMBER",
+      "HUMAN_HUMAN"
+    ],
+    "impact_type": [
+      "BREACHES_TRUST",
+      "EXPLOITS",
+      "WEAKENS"
+    ]
+  },
+  "agent": {
+    "agent_type": "STATE_OFFICIAL",
+    "virtues": [
+      "JUSTICE"
+    ],
+    "vices": [
+      "DISHONESTY",
+      "UNFAIRNESS",
+      "CRUELTY"
+    ]
+  },
+  "duty_assessment": {
+    "duties_upheld": [
+      "BENEFICENCE",
+      "JUSTICE"
+    ],
+    "duties_violated": [
+      "FIDELITY",
+      "NON_MALEFICENCE",
+      "JUSTICE"
+    ]
+  }
+}

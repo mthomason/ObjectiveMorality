@@ -1,0 +1,50 @@
+{
+  "action_description": "Pushed a large person off a bridge to stop a runaway trolley, resulting in their death but saving five people.",
+  "universalized_result": {
+    "self_collapse": true,
+    "contradiction_in_will": true
+  },
+  "consequences": {
+    "net_flourishing": 4,
+    "net_utility": 4,
+    "power_expression": -2,
+    "individual_impact": {
+      "SAVED_PEOPLE": 5,
+      "STRANGER": -1,
+      "AGENT": -5
+    },
+    "time_horizon": "LONG"
+  },
+  "cooperative_outcome": {
+    "stable": false,
+    "societal_trust_change": -3
+  },
+  "trust_impact": {
+    "breach": true,
+    "relationships_affected": [
+      "COMMUNITY_MEMBER"
+    ],
+    "impact_type": [
+      "BREACHES_TRUST",
+      "WEAKENS"
+    ]
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [
+      "JUSTICE"
+    ],
+    "vices": [
+      "CRUELTY"
+    ]
+  },
+  "duty_assessment": {
+    "duties_upheld": [
+      "BENEFICENCE"
+    ],
+    "duties_violated": [
+      "NON_MALEFICENCE",
+      "JUSTICE"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "action_description": "Lied to an inquiring official about a friend's whereabouts to protect them from potential harm.",
+  "universalized_result": {
+    "self_collapse": true,
+    "contradiction_in_will": true
+  },
+  "consequences": {
+    "net_flourishing": 10,
+    "net_utility": 15,
+    "power_expression": -2,
+    "individual_impact": {
+      "FRIEND": 100,
+      "SOCIETY": -15,
+      "OFFICIAL": -5,
+      "AGENT": 5
+    },
+    "time_horizon": "MEDIUM"
+  },
+  "cooperative_outcome": {
+    "stable": true,
+    "societal_trust_change": -1
+  },
+  "trust_impact": {
+    "breach": true,
+    "relationships_affected": [
+      "CITIZEN_STATE",
+      "FRIEND_FRIEND",
+      "CITIZEN_STATE"
+    ],
+    "impact_type": [
+      "BREACHES_TRUST",
+      "STRENGTHENS",
+      "NURTURES"
+    ]
+  },
+  "agent": {
+    "agent_type": "FRIEND",
+    "virtues": [
+      "LOYALTY",
+      "COMPASSION",
+      "COURAGE"
+    ],
+    "vices": [
+      "DISHONESTY"
+    ]
+  },
+  "duty_assessment": {
+    "duties_upheld": [
+      "BENEFICENCE",
+      "FIDELITY"
+    ],
+    "duties_violated": [
+      "FIDELITY",
+      "NON_MALEFICENCE"
+    ]
+  }
+}

@@ -28,7 +28,6 @@ def main():
 	#	examples.  But, I'm leaving the existing context in code, to
 	#	demonstrate how it's done, and because the comments are useful.
 	# ------------------------------
-
 	if not context_manager.context_exists("adultery"):
 		context_adultery = MoralContext(
 			action_description="Engaged in sexual relations with someone else's spouse.",
@@ -69,7 +68,6 @@ def main():
 	# ------------------------------
 	# Moral Case: Pork Modern
 	# ------------------------------
-
 	context_pork_modern = MoralContext(
 		action_description="Ate properly cooked pork from a regulated source.",
 		
@@ -112,13 +110,11 @@ def main():
 			duties_violated=[]
 		)
 	)
-
 	result_pork_modern = engine_runner.run_engines("pork_modern", context_pork_modern)
 
 	# ------------------------------
 	# Moral Case: Pork Premodern
 	# ------------------------------
-
 	context_pork_premodern = MoralContext(
 		action_description="Ate undercooked pork from an unregulated source in a context with known parasites.",
 		
@@ -161,13 +157,11 @@ def main():
 			duties_violated=[DutyType.SELF_IMPROVEMENT]  # failing to maintain health
 		)
 	)
-
 	result_pork_premodern = engine_runner.run_engines("pork_premodern", context_pork_premodern)
 
 	# ------------------------------
 	# Moral Case: Tell a Lie
 	# ------------------------------
-
 	context_lie = MoralContext(
 		action_description="Lied to an inquiring official about a friend's whereabouts to protect them from potential harm.",
 		
@@ -220,13 +214,11 @@ def main():
 			]
 		)
 	)
-
 	result_tell_a_lie = engine_runner.run_engines("tell_a_lie", context_lie)
 
 	# ------------------------------
 	# Moral Case: Charity
 	# ------------------------------
-
 	context_charity = MoralContext(
 		action_description="Donated a significant portion of income to effective charities helping the global poor.",
 		
@@ -277,13 +269,11 @@ def main():
 			duties_violated=[]  # no duties violated
 		)
 	)
-	
 	result_charity = engine_runner.run_engines("charitable_donation", context_charity)
 
 	# ------------------------------
 	# Moral Case: Mass Surveillance
 	# ------------------------------
-
 	context_mass_surveillance = MoralContext(
 		action_description="Implemented mass surveillance program collecting data on all citizens without individualized warrants, justified by national security claims.",
 		
@@ -338,13 +328,11 @@ def main():
 			]
 		)
 	)
-	
 	result_mass_surveillance = engine_runner.run_engines("mass_surveillance", context_mass_surveillance)
 
 	# ------------------------------
 	# Moral Case: Trolley Problem - Switch Variant
 	# ------------------------------
-
 	context_trolley_switch = MoralContext(
 		action_description="Pulled a lever to divert a runaway trolley onto a side track, resulting in one death but saving five people.",
 		
@@ -392,13 +380,11 @@ def main():
 			]
 		)
 	)
-
 	result_trolley_switch = engine_runner.run_engines("trolley_switch", context_trolley_switch)
 
 	# ------------------------------
 	# Moral Case: Trolley Problem - Fat Man Variant
 	# ------------------------------
-
 	context_trolley_fat_man = MoralContext(
 		action_description="Pushed a large person off a bridge to stop a runaway trolley, resulting in their death but saving five people.",
 		
@@ -446,13 +432,11 @@ def main():
 			]
 		)
 	)
-
 	result_trolley_fat_man = engine_runner.run_engines("trolley_fat_man", context_trolley_fat_man)
 
 	# ------------------------------
 	# Moral Case: Suicide
 	# ------------------------------
-
 	context_suicide = MoralContext(
 		action_description="A person intentionally ends their own life to escape unbearable suffering.",
 		
@@ -518,8 +502,16 @@ def main():
 			]
 		)
 	)
-
 	result_suicide = engine_runner.run_engines("suicide", context_suicide)
+
+	# context_manager.save_context(context_pork_modern, "pork_modern")
+	# context_manager.save_context(context_pork_premodern, "pork_premodern")
+	# context_manager.save_context(context_lie, "tell_a_lie")
+	# context_manager.save_context(context_charity, "charitable_donation")
+	# context_manager.save_context(context_mass_surveillance, "mass_surveillance")
+	# context_manager.save_context(context_trolley_switch, "trolley_switch")
+	# context_manager.save_context(context_trolley_fat_man, "trolley_fat_man")
+	# context_manager.save_context(context_suicide, "suicide")
 
 	engine_runner.display_results("adultery", context_adultery, result_adultery)
 	engine_runner.display_results("pork_modern", context_pork_modern, result_pork_modern)

@@ -1,0 +1,40 @@
+{
+  "action_description": "Ate undercooked pork from an unregulated source in a context with known parasites.",
+  "universalized_result": {
+    "self_collapse": false,
+    "contradiction_in_will": false
+  },
+  "consequences": {
+    "net_flourishing": -12,
+    "net_utility": -15,
+    "power_expression": -3,
+    "individual_impact": {
+      "EATER": -20,
+      "FAMILY_MEMBER": -10,
+      "COMMUNITY": -5
+    },
+    "time_horizon": "MEDIUM"
+  },
+  "cooperative_outcome": {
+    "stable": true,
+    "societal_trust_change": 0
+  },
+  "trust_impact": {
+    "breach": false,
+    "relationships_affected": [],
+    "impact_type": []
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [],
+    "vices": [
+      "FOOLISHNESS"
+    ]
+  },
+  "duty_assessment": {
+    "duties_upheld": [],
+    "duties_violated": [
+      "SELF_IMPROVEMENT"
+    ]
+  }
+}

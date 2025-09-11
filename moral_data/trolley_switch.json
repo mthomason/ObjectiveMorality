@@ -1,0 +1,44 @@
+{
+  "action_description": "Pulled a lever to divert a runaway trolley onto a side track, resulting in one death but saving five people.",
+  "universalized_result": {
+    "self_collapse": false,
+    "contradiction_in_will": false
+  },
+  "consequences": {
+    "net_flourishing": 4,
+    "net_utility": 4,
+    "power_expression": 3,
+    "individual_impact": {
+      "SAVED_PEOPLE": 5,
+      "STRANGER": -1,
+      "AGENT": -2
+    },
+    "time_horizon": "LONG"
+  },
+  "cooperative_outcome": {
+    "stable": true,
+    "societal_trust_change": 0
+  },
+  "trust_impact": {
+    "breach": false,
+    "relationships_affected": [],
+    "impact_type": []
+  },
+  "agent": {
+    "agent_type": "STRANGER",
+    "virtues": [
+      "COURAGE",
+      "JUSTICE"
+    ],
+    "vices": []
+  },
+  "duty_assessment": {
+    "duties_upheld": [
+      "BENEFICENCE",
+      "JUSTICE"
+    ],
+    "duties_violated": [
+      "NON_MALEFICENCE"
+    ]
+  }
+}
