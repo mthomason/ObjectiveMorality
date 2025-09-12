@@ -128,15 +128,15 @@ def main():
 			net_utility=-15,
 			time_horizon=TimeHorizon.MEDIUM,
 			individual_impact={
-				ImpactSubject.EATER: -20,  # illness and suffering
-				ImpactSubject.FAMILY_MEMBER: -10,  # burden of care
-				ImpactSubject.COMMUNITY: -5 # potential spread of illness
+				ImpactSubject.EATER: -20,			# illness and suffering
+				ImpactSubject.FAMILY_MEMBER: -10,	# burden of care
+				ImpactSubject.COMMUNITY: -5			# potential spread of illness
 			},
 			power_expression=-3  # poor judgment leading to harm
 		),
 		
 		cooperative_outcome=CooperativeOutcome(
-			stable=True,  # the social contract itself isn't threatened
+			stable=True,	# the social contract itself isn't threatened
 			societal_trust_change=0
 		),
 		
@@ -184,7 +184,7 @@ def main():
 		
 		cooperative_outcome=CooperativeOutcome(
 			stable=True, 
-			societal_trust_change=-1  # small negative impact on general trust
+			societal_trust_change=-1	# small negative impact on general trust
 		),
 		
 		trust_impact=TrustImpact(
@@ -441,8 +441,8 @@ def main():
 		action_description="A person intentionally ends their own life to escape unbearable suffering.",
 		
 		universalized_result=UniversalizedResult(
-			self_collapse=True,          # Universal suicide would lead to human extinction
-			contradiction_in_will=True   # Rational beings wouldn't will their own non-existence
+			self_collapse=True,			# Universal suicide would lead to human extinction
+			contradiction_in_will=True	# Rational beings wouldn't will their own non-existence
 		),
 		
 		consequences=Consequences(
@@ -450,11 +450,11 @@ def main():
 			net_utility=-15,
 			time_horizon=TimeHorizon.LONG,
 			individual_impact={
-				ImpactSubject.AGENT: -100,           # Complete loss of flourishing
-				ImpactSubject.FAMILY_MEMBER: -40,    # Profound grief and trauma
-				ImpactSubject.FRIEND: -30,           # Loss and emotional pain
-				ImpactSubject.COMMUNITY: -10,        # Social fabric weakened
-				ImpactSubject.SOCIETY: -5            # Loss of potential contribution
+				ImpactSubject.AGENT: -100,			# Complete loss of flourishing
+				ImpactSubject.FAMILY_MEMBER: -40,	# Profound grief and trauma
+				ImpactSubject.FRIEND: -30,			# Loss and emotional pain
+				ImpactSubject.COMMUNITY: -10,		# Social fabric weakened
+				ImpactSubject.SOCIETY: -5			# Loss of potential contribution
 			},
 			power_expression=-8          # Ultimate loss of agency and self-mastery
 		),
@@ -473,19 +473,19 @@ def main():
 				RelationshipType.HUMAN_HUMAN
 			],
 			impact_type=[
-				RelationshipImpact.BREACHES_TRUST,  # Breach of implicit social contract
-				RelationshipImpact.WEAKENS,         # Weakens family and community bonds
-				RelationshipImpact.EXPLOITS         # Exploits relationships by transferring pain
+				RelationshipImpact.BREACHES_TRUST,	# Breach of implicit social contract
+				RelationshipImpact.WEAKENS,			# Weakens family and community bonds
+				RelationshipImpact.EXPLOITS			# Exploits relationships by transferring pain
 			]
 		),
 		
 		agent=Agent(
 			agent_type=AgentType.STRANGER,
-			virtues=[Virtue.COURAGE],    # Some might see courage in facing death
+			virtues=[Virtue.COURAGE],	# Some might see courage in facing death
 			vices=[
-				Vice.DESPAIR,            # Overwhelming hopelessness
-				Vice.SELFISHNESS,        # Putting own suffering above others' needs
-				Vice.COWARDICE           # Fleeing from life's challenges (from some perspectives)
+				Vice.DESPAIR,			# Overwhelming hopelessness
+				Vice.SELFISHNESS,		# Putting own suffering above others' needs
+				Vice.COWARDICE			# Fleeing from life's challenges (from some perspectives)
 			]
 		),
 		
@@ -494,11 +494,11 @@ def main():
 				# Some might argue it upholds self-determination
 			],
 			duties_violated=[
-				DutyType.NON_MALEFICENCE,    # Harm to self
-				DutyType.BENEFICENCE,        # Failure to continue potential good works
-				DutyType.FIDELITY,           # Breaking implicit promises to loved ones
-				DutyType.GRATITUDE,          # Failing to appreciate gift of life
-				DutyType.SELF_IMPROVEMENT    # Ending rather than improving self
+				DutyType.NON_MALEFICENCE,	# Harm to self
+				DutyType.BENEFICENCE,		# Failure to continue potential good works
+				DutyType.FIDELITY,			# Breaking implicit promises to loved ones
+				DutyType.GRATITUDE,			# Failing to appreciate gift of life
+				DutyType.SELF_IMPROVEMENT	# Ending rather than improving self
 			]
 		)
 	)
