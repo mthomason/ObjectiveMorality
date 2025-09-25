@@ -456,7 +456,7 @@ def main():
 				ImpactSubject.COMMUNITY: -10,		# Social fabric weakened
 				ImpactSubject.SOCIETY: -5			# Loss of potential contribution
 			},
-			power_expression=-8          # Ultimate loss of agency and self-mastery
+			power_expression=-8						# Ultimate loss of agency and self-mastery
 		),
 		
 		cooperative_outcome=CooperativeOutcome(
