@@ -30,7 +30,7 @@ This project is intended for educational purposes, particularly in a university 
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/your-username/ObjectiveMorality.git
+    git clone https://github.com/mthomason/ObjectiveMorality.git
     cd ObjectiveMorality
     ```
 2.  There are no external libraries to install.
@@ -44,6 +44,8 @@ python3 -m morals
 ```
 
 This will run the analyses for all the scenarios defined in `morals/main.py` and print the results to the console.
+
+![Example Terminal Output](assets/terminal-output-example.png)
 
 ## Usage
 

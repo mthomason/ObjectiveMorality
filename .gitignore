@@ -1,6 +1,10 @@
 
+# Python Specific Files
 venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Mac OS Specific Files
+.DS_Store
