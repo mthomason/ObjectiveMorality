@@ -1,0 +1,80 @@
+---
+---
+
+// Import the Minima theme styles
+@import "minima";
+
+// Custom styles for the dark theme and code snippets
+body {
+  background-color: #212529;
+  color: #dee2e6;
+}
+
+a {
+  color: #74c0fc;
+}
+
+.site-header {
+  background-color: #343a40;
+  border-bottom: 1px solid #495057;
+}
+
+.site-title, .site-title:visited {
+  color: #f8f9fa;
+}
+
+.post-link {
+  color: #f8f9fa;
+}
+
+code, pre {
+  background-color: #495057;
+  border: 1px solid #ced4da;
+  color: #f8f9fa;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  border-radius: 6px;
+}
+
+li > code {
+    font-weight: bold;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #f8f9fa;
+}
+
+.page-link {
+    color: #f8f9fa !important;
+}
+
+.post-content h2 {
+    color: #f8f9fa;
+}
+
+.social-media-list a {
+	display: inline-flex;		/* Keep icon + username on one line */
+	align-items: center;		/* Vertically align the icon and text */
+	white-space: nowrap;		/* Prevent wrapping to a new line */
+}
+
+.social-media-list .svg-icon {
+	margin-right: 0.3em;		/* Add a bit of space before the username */
+	flex-shrink: 0;				/* Prevent the icon from squishing */
+}
+
+.footer-col-1 {
+    width: -webkit-calc(30% - (30px / 2));
+    width: calc(30% - 30px / 2);
+}
+
+.footer-col-2 {
+    width: -webkit-calc(25% - (30px / 2));
+    width: calc(25% - 30px / 2);
+}
+
+.footer-col-3 {
+    width: -webkit-calc(45% - (30px / 2));
+    width: calc(45% - 30px / 2);
+}

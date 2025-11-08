@@ -23,7 +23,10 @@
 	],
 	"cSpell.ignorePaths": [
 		"**/venv/**",
-		"**/.gitignore"
+		"**/.gitignore",
+		"docs/_config.yml",
+		"docs/Gemfile.lock",
+		"docs/Gemfile"
 	],
 	"editor.tabSize": 4,
 	"editor.detectIndentation": false

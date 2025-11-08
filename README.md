@@ -45,7 +45,7 @@ python3 -m morals
 
 This will run the analyses for all the scenarios defined in `morals/main.py` and print the results to the console.
 
-![Example Terminal Output](assets/terminal-output-example.png)
+![Example Terminal Output](docs/assets/images/terminal-output-example.png)
 
 ## Usage
 
