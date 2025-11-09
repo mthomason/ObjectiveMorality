@@ -37,6 +37,8 @@ This project is intended for educational purposes, particularly in a university 
 
 ### Running the Program
 
+This program does not use any Python extensions, packages, or modules.  There is nothing to install to run it.
+
 To run the demonstration with the pre-defined moral scenarios, execute the following command from the root directory:
 
 ```bash
