@@ -126,3 +126,7 @@ Contributions are welcome! If you have suggestions for new features, improvement
 ## License
 
 This project is released into the public domain. See the [LICENSE](LICENSE) file for more details.
+
+## Webfront
+
+This project has a webfront [here](https://mthomason.github.io/ObjectiveMorality/).
